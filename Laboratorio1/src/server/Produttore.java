@@ -16,17 +16,19 @@ public class Produttore {
 		
 		BufferedReader in = null;
 		in = new BufferedReader(new InputStreamReader(System.in));
-			
+		
 		FileWriter fout;
 		String line = null;
 		try {
 			fout = new FileWriter(args[0]);
-			line = in.readLine() + "\n";
-			while (line != null) {
-				fout.write(line, 0, line.length());
-				line = in.readLine() + "\n";
+			
+			while ((line = in.readLine())!= null) {
+			line = line + "\n";
+			fout.write(line, 0, line.length());
+				
 			}
 			fout.close();
+			
 		}
 	    catch (IOException e) { 
 			e.printStackTrace();
