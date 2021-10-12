@@ -12,7 +12,7 @@ public class Consumatore {
 	public static void main(String[] args) {
 		FileReader r = null;
 
-		if (args.length < 1) {
+		if (args.length < 1 || args.length > 2) {
 			System.out.println("Utilizzo: consumatore <inputFilename>");
 			System.exit(0);
 		}
