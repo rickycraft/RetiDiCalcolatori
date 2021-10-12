@@ -13,6 +13,7 @@ public class DiscoveryServer extends UdpServer {
 
 	private static final String USAGE = "Usage: java DiscoveryServer [serverPort>1024] nome1 porta1 nome2 porta2";
 
+	// ottimizzazione creazione di un array
 	private List<RowSwapServer> rsServers;
 
 	public DiscoveryServer(int port, List<RowSwapServer> servers) throws SocketException {
@@ -35,6 +36,7 @@ public class DiscoveryServer extends UdpServer {
 			try {
 				listenSocket.receive(packet);
 				data = new DataInputStream(new ByteArrayInputStream(packet.getData(), 0, packet.getLength())).readUTF();
+				// find the server
 				for (RowSwapServer rs : rsServers) {
 					if (rs.filename == data) {
 						reply = rs.port;
@@ -56,6 +58,7 @@ public class DiscoveryServer extends UdpServer {
 	public static void main(String[] args) {
 		DiscoveryServer ds;
 
+		// controllo che siano dispari, coppie per i rowswap + porta del discovery
 		if (args.length < 3) {
 			System.out.println(USAGE);
 			System.exit(3);
@@ -68,7 +71,7 @@ public class DiscoveryServer extends UdpServer {
 			for (int i = 1; i < args.length; i += 2) {
 				// args[i] nomeFile
 				// args[i+1] porta
-				// check for duplicates
+				// controllo dei duplicati, sia file che porta
 				port = Integer.parseInt(args[i + 1]);
 				servers.add(new RowSwapServer(port, args[i]));
 			}

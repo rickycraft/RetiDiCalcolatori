@@ -29,6 +29,7 @@ public class RowSwapServer extends UdpServer implements Runnable {
 				line1 = Integer.parseInt(tk.nextToken());
 				line2 = Integer.parseInt(tk.nextToken());
 
+				// controllo dello stato e stampa a video
 				reply = LineUtility.swapLine(filename, line1, line2);
 
 				// send to client
