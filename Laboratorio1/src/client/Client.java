@@ -18,6 +18,7 @@ public class Client {
 		}
 
 		try {
+			// variabili IPDS portDS fileName
 			InetAddress address = InetAddress.getByName(args[0]);
 			int port = Integer.parseInt(args[1]);
 			String filename = args[2];
