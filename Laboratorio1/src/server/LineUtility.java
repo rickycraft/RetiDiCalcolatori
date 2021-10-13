@@ -7,8 +7,16 @@ import java.io.IOException;
 
 public class LineUtility {
 
-	static String swapLine(String filename, int line1, int line2) {
-		return "To be implemented";
+	static int swapLine(String filename, int line1, int line2) {
+
+		int primaLinea;
+		if (line1 == line2)
+			return -1;
+
+		String linea1 = LineUtility.getLine(filename, line1);
+		String linea2 = LineUtility.getLine(filename, line2);
+
+		return 0;
 	}
 
 	static String getLine(String nomeFile, int numLinea) {
