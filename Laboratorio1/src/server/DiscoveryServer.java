@@ -60,8 +60,8 @@ public class DiscoveryServer extends UdpServer {
 		DiscoveryServer ds;
 
 		// controllo che siano dispari, coppie per i rowswap + porta del discovery
-		if (args.length < 3) {
-			System.out.println(USAGE);
+		if (((args.length % 2) == 0) || (args.length < 3)) {
+			System.out.println("Usage: java DiscoveryServer portaDS nomeFile1 Porta1 [... nomeFileN PortaN]");
 			System.exit(3);
 		}
 
@@ -77,8 +77,8 @@ public class DiscoveryServer extends UdpServer {
 				servers.add(new RowSwapServer(port, args[i]));
 			}
 			ds = new DiscoveryServer(port, servers);
-			ds.startServers();
-			ds.start();
+			ds.startServers(); // Avvio tutti i server RowSwap
+			ds.start(); // Avvio il server DS
 
 			// catch errors
 		} catch (SocketException e) {
