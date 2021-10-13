@@ -88,7 +88,7 @@ public class Client {
 				dataOutStream.writeInt(numLinea2); // numRiga2
 				byte[] dataRS = byteOutStream.toByteArray();
 				// riempimento del pacchetto RS
-				packetRS.setData(data, 0, data.length);
+				packetRS.setData(dataRS, 0, dataRS.length);
 				// invio del pacchetto al server RS
 				socket.send(packetRS);
 
