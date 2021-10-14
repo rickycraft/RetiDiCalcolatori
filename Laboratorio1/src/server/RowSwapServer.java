@@ -19,7 +19,8 @@ public class RowSwapServer extends UdpServer implements Runnable {
 
 	@Override
 	public void run() {
-		String data, reply;
+		String data;
+		int reply;
 		int line1, line2;
 		while (true) {
 			try {
