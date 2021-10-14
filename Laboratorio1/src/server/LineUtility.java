@@ -6,14 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class LineUtility {
-
-	public static void main(String[] args) {
-
-		// nomefile line1 line2
-		System.out.println(LineUtility.swapLine(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2])));
-	}
 
 	static int swapLine(String filename, int line1, int line2) {
 
@@ -30,7 +25,7 @@ public class LineUtility {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filename));
 
-			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+			StringBuilder out = new StringBuilder();
 			int i = 1;
 			boolean scambio1, scambio2;
 			scambio1 = false;
@@ -38,20 +33,23 @@ public class LineUtility {
 			String lineaCorrente;
 			while ((lineaCorrente = in.readLine()) != null) {
 				if (i == line1) {
-					out.write(linea2);
+					out.append(linea2 + "\n");
 					scambio1 = true;
 				} else {
 					if (i == line2) {
-						out.write(linea1);
+						out.append(linea1 + "\n");
 						scambio2 = true;
 					} else {
-						out.write(lineaCorrente);
+						out.append(lineaCorrente + "\n");
 					}
 				}
 
 				i++;
 			}
-			out.close();
+			BufferedWriter out_temp = new BufferedWriter(new FileWriter(filename));
+			PrintWriter fout = new PrintWriter(out_temp);
+			fout.write(out.toString());
+			fout.close();
 			in.close();
 
 			if (scambio1 == true && scambio2 == true)
