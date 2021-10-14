@@ -1,15 +1,16 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class LineUtility {
 
 	static int swapLine(String filename, int line1, int line2) {
 
-		int primaLinea;
 		if (line1 == line2)
 			return 1; // Non occorre scambi
 
@@ -19,8 +20,45 @@ public class LineUtility {
 			return -1; // line1 non è presente nel file
 		if (linea2.equalsIgnoreCase("linea non trovata"))
 			return -1; // line2 non è presente nel file
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(filename));
+			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
+			int i = 1;
+			boolean scambio1, scambio2;
+			scambio1 = false;
+			scambio2 = false;
+			String lineaCorrente;
+			while ((lineaCorrente = in.readLine()) != null) {
+				if (i == line1) {
+					out.write(linea2);
+					scambio1 = true;
+				} else {
+					if (i == line2) {
+						out.write(linea1);
+						scambio2 = true;
+					} else {
+						out.write(lineaCorrente);
+					}
+				}
 
-		return 0;
+				i++;
+			}
+			out.close();
+			in.close();
+
+			if (scambio1 == true && scambio2 == true)
+				return 1;
+			else
+				return -1;
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 	static String getLine(String nomeFile, int numLinea) {
