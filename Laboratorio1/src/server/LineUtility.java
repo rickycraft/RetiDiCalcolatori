@@ -9,6 +9,12 @@ import java.io.IOException;
 
 public class LineUtility {
 
+	public static void main(String[] args) {
+
+		// nomefile line1 line2
+		System.out.println(LineUtility.swapLine(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+	}
+
 	static int swapLine(String filename, int line1, int line2) {
 
 		if (line1 == line2)
@@ -16,12 +22,14 @@ public class LineUtility {
 
 		String linea1 = LineUtility.getLine(filename, line1);
 		String linea2 = LineUtility.getLine(filename, line2);
+
 		if (linea1.equalsIgnoreCase("Linea non trovata"))
 			return -1; // line1 non è presente nel file
 		if (linea2.equalsIgnoreCase("linea non trovata"))
 			return -1; // line2 non è presente nel file
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filename));
+
 			BufferedWriter out = new BufferedWriter(new FileWriter(filename));
 			int i = 1;
 			boolean scambio1, scambio2;
