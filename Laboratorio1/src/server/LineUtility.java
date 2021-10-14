@@ -11,10 +11,14 @@ public class LineUtility {
 
 		int primaLinea;
 		if (line1 == line2)
-			return -1;
+			return 1; // Non occorre scambi
 
 		String linea1 = LineUtility.getLine(filename, line1);
 		String linea2 = LineUtility.getLine(filename, line2);
+		if (linea1.equalsIgnoreCase("Linea non trovata"))
+			return -1; // line1 non è presente nel file
+		if (linea2.equalsIgnoreCase("linea non trovata"))
+			return -1; // line2 non è presente nel file
 
 		return 0;
 	}
