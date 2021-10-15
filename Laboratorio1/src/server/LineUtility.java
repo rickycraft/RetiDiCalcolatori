@@ -15,21 +15,15 @@ public class LineUtility {
 		if (line1 == line2)
 			return 1; // Non occorre scambi
 
-		String linea1 = LineUtility.getLine(filename, line1);
-		String linea2 = LineUtility.getLine(filename, line2);
-
-		if (linea1.equalsIgnoreCase("Linea non trovata"))
-			return -1; // line1 non è presente nel file
-		if (linea2.equalsIgnoreCase("linea non trovata"))
-			return -1; // line2 non è presente nel file
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(filename));
+			String linea1 = LineUtility.getLine(filename, line1);
+			String linea2 = LineUtility.getLine(filename, line2);
 
+			BufferedReader in = new BufferedReader(new FileReader(filename));
 			StringBuilder out = new StringBuilder();
 			int i = 1;
-			boolean scambio1, scambio2;
-			scambio1 = false;
-			scambio2 = false;
+			boolean scambio1 = false;
+			boolean scambio2 = false;
 			String lineaCorrente;
 			while ((lineaCorrente = in.readLine()) != null) {
 				if (i == line1) {
@@ -43,68 +37,36 @@ public class LineUtility {
 						out.append(lineaCorrente + "\n");
 					}
 				}
-
 				i++;
 			}
-			BufferedWriter out_temp = new BufferedWriter(new FileWriter(filename));
-			PrintWriter fout = new PrintWriter(out_temp);
+
+			PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
 			fout.write(out.toString());
 			fout.close();
 			in.close();
 
-			if (scambio1 == true && scambio2 == true)
-				return 1;
-			else
-				return -1;
-
+			return (scambio1 == true && scambio2 == true) ? 1 : -1;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Non ho trovato il file");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Errore di IO");
 			e.printStackTrace();
 		}
 		return -1;
 	}
 
-	static String getLine(String nomeFile, int numLinea) {
+	static String getLine(String nomeFile, int numLinea) throws FileNotFoundException, IOException {
 		String linea = null;
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new FileReader(nomeFile));
-			for (int i = 1; i <= numLinea; i++) {
-				linea = in.readLine();
-				if (linea == null) {
-					linea = "Linea non trovata";
-					in.close();
-					return linea;
-				}
-			}
-			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return linea = "File non trovato";
-		} catch (IOException e) {
-			e.printStackTrace();
-			return linea = "Linea non trovata";
-		}
-		return linea;
-	}
-
-	static String getNextLine(BufferedReader in) {
-		String linea = null;
-		try {
-			if ((linea = in.readLine()) == null) {
+		BufferedReader in = new BufferedReader(new FileReader(nomeFile));
+		for (int i = 1; i <= numLinea; i++) {
+			linea = in.readLine();
+			if (linea == null) {
+				linea = "Linea non trovata";
 				in.close();
-				linea = "Nessuna linea disponibile";
+				return linea;
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return linea = "File non trovato";
-		} catch (IOException e) {
-			e.printStackTrace();
-			linea = "Nessuna linea disponibile";
 		}
+		in.close();
 		return linea;
 	}
 

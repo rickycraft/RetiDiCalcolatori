@@ -31,9 +31,8 @@ public class Client {
 			}
 			// creazione datagramSocket nel cliente
 			DatagramSocket socket = new DatagramSocket();
-			System.out.println(socket.getLocalPort());
-			System.out.println(socket.getLocalAddress());
-			System.out.println(InetAddress.getLocalHost());
+			System.out.printf("CLIENT IP %s PORTA %s HOST %s\n", socket.getLocalAddress(), socket.getLocalPort(),
+					InetAddress.getLocalHost());
 			socket.setSoTimeout(30000);
 
 			// creazione pacchetto datagram con nomeFile
@@ -42,8 +41,7 @@ public class Client {
 			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutStream = new DataOutputStream(byteOutStream);
 			dataOutStream.writeUTF(filename);
-			byte[] sendData = byteOutStream.toByteArray();
-			packet.setData(sendData);
+			packet.setData(byteOutStream.toByteArray());
 			// invio del pacchetto al server
 			socket.send(packet);
 
@@ -69,34 +67,33 @@ public class Client {
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			String letto;
+			int numLinea1, numLinea2;
 			while ((letto = stdIn.readLine()) != null) {
 				System.out.println("numero di riga 2");
-				int numLinea1 = Integer.parseInt(letto);
-				int numLinea2 = Integer.parseInt(stdIn.readLine());
-				String numeri = numLinea1 + " " + numLinea2; // numero1+space+numero2
+				numLinea1 = Integer.parseInt(letto);
+				numLinea2 = Integer.parseInt(stdIn.readLine());
+				System.out.printf("Lette linee %d %d", numLinea1, numLinea2);
+
 				byteOutStream = new ByteArrayOutputStream();
 				dataOutStream = new DataOutputStream(byteOutStream);
-				dataOutStream.writeUTF(numeri);
-				sendData = byteOutStream.toByteArray();
-
-				packet.setData(sendData);
+				dataOutStream.writeUTF(numLinea1 + " " + numLinea2);
+				packet.setData(byteOutStream.toByteArray());
 				socket.send(packet);
+
 				// aspetto il pacchetto di ritorno
 				packet.setData(buf);
-				socket.receive(packet); // attesa del pacchetto di risposta
-
+				socket.receive(packet);
 				// estrazione del pacchetto di ritorno
-				byteInStream = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
-				dataInStream = new DataInputStream(byteInStream);
+				dataInStream = new DataInputStream(new ByteArrayInputStream(packet.getData(), 0, packet.getLength()));
 				// risposta del RowSwap Server ( intero )
 				int rispRS = dataInStream.readInt();
 				// caso esito negativo da DS
 
 				if (rispRS < 0) {
 					System.out.println("errore: righe non scambiate");
+				} else {
+					System.out.println("Lo scambio di righe ï¿½ avvenuto con successo");
 				}
-				else
-					System.out.println("Lo scambio di righe è avvenuto con successo");
 				System.out.println(" ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			}
 
