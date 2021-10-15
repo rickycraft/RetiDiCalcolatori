@@ -50,7 +50,7 @@ public class DiscoveryServer extends UdpServer {
 				// send to client
 				byteOut = new ByteArrayOutputStream();
 				dataOut = new DataOutputStream(byteOut);
-				dataOut.writeUTF(String.valueOf(reply));
+				dataOut.writeInt(reply);
 				packet.setData(byteOut.toByteArray());
 				listenSocket.send(packet);
 			} catch (IOException e) {
