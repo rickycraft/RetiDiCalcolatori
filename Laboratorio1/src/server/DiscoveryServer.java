@@ -34,14 +34,14 @@ public class DiscoveryServer extends UdpServer {
 			// set -1 as an error
 			reply = -1;
 			try {
-				System.out.println(listenSocket.getLocalPort());
-				System.out.println(listenSocket.getLocalAddress());
+				System.out.println("Porta DS:"+listenSocket.getLocalPort());
+				System.out.println("IP DS:" + listenSocket.getLocalAddress());
 				listenSocket.receive(packet);
 				System.out.println("Ricevuto packet");
 				data = new DataInputStream(new ByteArrayInputStream(packet.getData(), 0, packet.getLength())).readUTF();
 				// find the server
 				for (RowSwapServer rs : rsServers) {
-					if (rs.filename == data) {
+					if (rs.filename.equals(data)) {
 						reply = rs.port;
 						break;
 
@@ -52,6 +52,7 @@ public class DiscoveryServer extends UdpServer {
 				dataOut = new DataOutputStream(byteOut);
 				dataOut.writeInt(reply);
 				packet.setData(byteOut.toByteArray());
+				System.out.println("Spedito: "+reply);
 				listenSocket.send(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
