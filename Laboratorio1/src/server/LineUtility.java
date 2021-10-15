@@ -61,9 +61,8 @@ public class LineUtility {
 		for (int i = 1; i <= numLinea; i++) {
 			linea = in.readLine();
 			if (linea == null) {
-				linea = "Linea non trovata";
 				in.close();
-				return linea;
+				throw new IOException("line not found");
 			}
 		}
 		in.close();
