@@ -5,7 +5,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class UdpServer {
 
@@ -26,7 +28,12 @@ public class UdpServer {
 		}
 
 		this.port = port;
-		listenSocket = new DatagramSocket(port);
+		try {
+			listenSocket = new DatagramSocket(port,InetAddress.getLocalHost());
+		} catch (SocketException | UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		buffer = new byte[256];
 		packet = new DatagramPacket(buffer, buffer.length);
 		packet.setData(buffer);
