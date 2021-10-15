@@ -13,7 +13,7 @@ import java.net.InetAddress;
 
 public class Client {
 
-	public static void main(String[] args) {
+	public static void main(String args[]) {
 		// args check
 		if (args.length != 3) {
 			System.exit(1);
@@ -22,7 +22,7 @@ public class Client {
 		try {
 			// variabili IPDS portDS fileName
 			InetAddress address = InetAddress.getByName(args[0]);
-			System.out.print(InetAddress.getLocalHost().toString());
+			// System.out.println(InetAddress.getLocalHost().toString());
 			int port = Integer.parseInt(args[1]);
 			String filename = args[2];
 
@@ -32,23 +32,26 @@ public class Client {
 			}
 
 			// creazione datagramSocket
-			DatagramSocket socket = new DatagramSocket(port, address);
+			DatagramSocket socket = new DatagramSocket();
+			System.out.println(socket.getLocalPort());
+			System.out.println(socket.getLocalAddress());
 			socket.setSoTimeout(300000);
 			byte[] buff = new byte[256];
 			// creazione pacchetto datagram
 			DatagramPacket packet = new DatagramPacket(buff, buff.length);
-
+			packet.setAddress(address);
+			packet.setPort(port);
 			// send discovery packet
 			// creazione del pacchetto con le informazione del nome file
 			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutStream = new DataOutputStream(byteOutStream);
-			dataOutStream.writeUTF(filename); // nomeFile è una stringa
+			dataOutStream.writeUTF(filename); // nomeFile una stringa
 			byte[] data = byteOutStream.toByteArray();
 			// riempimento del pacchetto
 			packet.setData(data, 0, data.length);
 			// invio del pacchetto al server
 			socket.send(packet);
-			// scatta IllegalArgumentException perchè server non attivo
+			// scatta IllegalArgumentException perche server non attivo
 
 			// inizializzaione del pacchetto risposta
 			packet.setData(buff);
