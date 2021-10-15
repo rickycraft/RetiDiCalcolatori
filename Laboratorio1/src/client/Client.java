@@ -33,7 +33,8 @@ public class Client {
 			DatagramSocket socket = new DatagramSocket();
 			System.out.println(socket.getLocalPort());
 			System.out.println(socket.getLocalAddress());
-			socket.setSoTimeout(3000);
+			System.out.println(InetAddress.getLocalHost());
+			socket.setSoTimeout(30000);
 
 			// creazione pacchetto datagram con nomeFile
 			byte[] buf = new byte[256];
@@ -94,6 +95,8 @@ public class Client {
 				if (rispRS < 0) {
 					System.out.println("errore: righe non scambiate");
 				}
+				else
+					System.out.println("Lo scambio di righe è avvenuto con successo");
 				System.out.println(" ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			}
 
