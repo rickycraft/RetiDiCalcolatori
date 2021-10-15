@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.StringTokenizer;
 
@@ -24,6 +26,7 @@ public class RowSwapServer extends UdpServer implements Runnable {
 		int line1, line2;
 		while (true) {
 			try {
+				packet.setData(buffer);
 				listenSocket.receive(packet);
 				data = new DataInputStream(new ByteArrayInputStream(packet.getData(), 0, packet.getLength())).readUTF();
 				StringTokenizer tk = new StringTokenizer(data);
@@ -32,7 +35,12 @@ public class RowSwapServer extends UdpServer implements Runnable {
 
 				// controllo dello stato e stampa a video
 				reply = LineUtility.swapLine(filename, line1, line2);
-
+				// salvo ind e porta da dove è arrivato il pacchetto
+				InetAddress clientAddress = packet.getAddress();
+				int clientPort = packet.getPort();
+				// preparo il pacchetto da spedire
+				byte[] buf = new byte[256];
+				packet = new DatagramPacket(buf, buf.length, clientAddress, clientPort);
 				// send to client
 				byteOut = new ByteArrayOutputStream();
 				dataOut = new DataOutputStream(byteOut);
