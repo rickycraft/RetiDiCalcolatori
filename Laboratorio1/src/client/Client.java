@@ -2,7 +2,9 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
@@ -28,15 +30,18 @@ public class Client {
 			socket.setSoTimeout(3000);
 
 			// creazione pacchetto datagram con nomeFile
-			byte[] sentData = new byte[256];
-			sentData = filename.getBytes();
-			DatagramPacket packet = new DatagramPacket(sentData, sentData.length, address, port);
+			byte[] buf = new byte[256];
+			DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
+			ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+			DataOutputStream dataOutStream = new DataOutputStream(byteOutStream);
+			dataOutStream.writeUTF(filename);
+			byte[] sendData = byteOutStream.toByteArray();
+			packet.setData(sendData);
 			// invio del pacchetto al server
 			socket.send(packet);
 
 			// inizializzaione del pacchetto risposta
-			byte[] receiveData = new byte[256];
-			packet = new DatagramPacket(receiveData, receiveData.length);
+			packet.setData(buf);
 			socket.receive(packet); // attesa del pacchetto di risposta
 
 			// estrazione del pacchetto di ritorno
@@ -53,31 +58,37 @@ public class Client {
 
 			// caso esito positivo posito ( numero porta)
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("numero di riga 1");
-			String numLinea1;
+			System.out.println("ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
+			String letto;
 
-			while ((numLinea1 = stdIn.readLine()) != null) {
+			while ((letto = stdIn.readLine()) != null) {
 				System.out.println("numero di riga 2");
-				String numLinea2 = stdIn.readLine();
-				byte[] sentData2 = new byte[256];
-				sentData2 = numLinea1.getBytes();
-				sentData2 = numLinea2.getBytes();
-				packet = new DatagramPacket(sentData2, sentData2.length, address, rsPort);
+				int numLinea1 = Integer.parseInt(letto);
+				int numLinea2 = Integer.parseInt(stdIn.readLine());
+				String numeri = numLinea1 + " " + numLinea2; // numero1+space+numero2
+				byteOutStream = new ByteArrayOutputStream();
+				dataOutStream = new DataOutputStream(byteOutStream);
+				dataOutStream.writeUTF(numeri);
+				byte[] sendData2 = byteOutStream.toByteArray();
+				packet = new DatagramPacket(buf, buf.length, address, rsPort);
+				packet.setData(sendData2);
 				socket.send(packet);
+				// aspetto il pacchetto di ritorno
+				packet.setData(buf);
+				socket.receive(packet); // attesa del pacchetto di risposta
 
-				byte[] receiveData2 = new byte[256];
-				packet = new DatagramPacket(receiveData2, receiveData2.length);
-				socket.receive(packet);
-
+				// estrazione del pacchetto di ritorno
 				byteInStream = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
 				dataInStream = new DataInputStream(byteInStream);
 				// risposta del RowSwap Server ( intero )
 				int rispRS = dataInStream.readInt();
+				// caso esito negativo da DS
+
 				if (rispRS < 0) {
 					System.out.println("errore: righe non scambiate");
 				}
-				System.out.println(" numero di riga 1");
-				numLinea1 = stdIn.readLine();
+				System.out.println(" ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
+				letto = stdIn.readLine();
 			}
 
 			// finito il ciclo delle richieste
