@@ -22,8 +22,14 @@ public class Client {
 		try {
 			// variabili IPDS portDS fileName
 			InetAddress address = InetAddress.getByName(args[0]);
+			System.out.print(InetAddress.getLocalHost().toString());
 			int port = Integer.parseInt(args[1]);
 			String filename = args[2];
+
+			if (port < 1024 || port > 65535) {
+				System.out.println("Porta non valida");
+				System.exit(1);
+			}
 
 			// creazione datagramSocket
 			DatagramSocket socket = new DatagramSocket(port, address);
@@ -42,6 +48,7 @@ public class Client {
 			packet.setData(data, 0, data.length);
 			// invio del pacchetto al server
 			socket.send(packet);
+			// scatta IllegalArgumentException perchè server non attivo
 
 			// inizializzaione del pacchetto risposta
 			packet.setData(buff);
@@ -53,7 +60,7 @@ public class Client {
 			// risposta del Discover Server ( intero )
 			int rsPort = dataInStream.readInt();
 			// caso esito negativo da DS
-			if (rsPort < 0) {
+			if (rsPort < 1024 || rsPort > 65535) {
 				System.out.println("errore: file non presente");
 				socket.close();
 				System.exit(1);
@@ -66,13 +73,17 @@ public class Client {
 			DatagramSocket socketRS = new DatagramSocket(rsPort, address);
 
 			do {
-				// chiedo al terminale al cliente i numeri delle due righe
-
+				// chiedo da terminale al cliente i numeri delle due righe
+				System.out.println("Inserisci il numero delle righe da scambiare");
 				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-				System.out.println("numero di riga 1");
-				int numLinea1 = Integer.parseInt(stdIn.readLine());
-				System.out.println("numero di riga 2");
-				int numLinea2 = Integer.parseInt(stdIn.readLine());
+				String righeStr = stdIn.readLine();
+				int numLinea1 = Integer.parseInt((righeStr.split(" "))[0]);
+				int numLinea2 = Integer.parseInt((righeStr.split(" "))[1]);
+				/*
+				 * System.out.println("numero di riga 1"); int numLinea1 =
+				 * Integer.parseInt(stdIn.readLine()); System.out.println("numero di riga 2");
+				 * int numLinea2 = Integer.parseInt(stdIn.readLine());
+				 */
 
 				// creazione datagramSocket RS (stesso indirizzo , diversa porta)
 				socket.setSoTimeout(300000);
@@ -111,7 +122,7 @@ public class Client {
 				// chiedo al cliente se vuole fare una nuova richiesta
 				System.out.println("nuova richiesta??? (Y/N) ");
 				si_no = stdIn.readLine().charAt(0);
-			} while (si_no == 'y');
+			} while (si_no == 'y' || si_no == 'Y');
 			// finito il ciclo delle richieste
 			System.out.println("ho finito");
 			socketRS.close();
