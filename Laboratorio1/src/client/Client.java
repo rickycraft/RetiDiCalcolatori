@@ -57,10 +57,11 @@ public class Client {
 			}
 
 			// caso esito positivo posito ( numero porta)
+
+			packet = new DatagramPacket(buf, buf.length, address, rsPort);
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			String letto;
-
 			while ((letto = stdIn.readLine()) != null) {
 				System.out.println("numero di riga 2");
 				int numLinea1 = Integer.parseInt(letto);
@@ -69,9 +70,9 @@ public class Client {
 				byteOutStream = new ByteArrayOutputStream();
 				dataOutStream = new DataOutputStream(byteOutStream);
 				dataOutStream.writeUTF(numeri);
-				byte[] sendData2 = byteOutStream.toByteArray();
-				packet = new DatagramPacket(buf, buf.length, address, rsPort);
-				packet.setData(sendData2);
+				sendData = byteOutStream.toByteArray();
+
+				packet.setData(sendData);
 				socket.send(packet);
 				// aspetto il pacchetto di ritorno
 				packet.setData(buf);
@@ -88,12 +89,12 @@ public class Client {
 					System.out.println("errore: righe non scambiate");
 				}
 				System.out.println(" ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
-				letto = stdIn.readLine();
 			}
 
 			// finito il ciclo delle richieste
-			System.out.println("ho finito");
 			socket.close();
+			System.out.println("ho finito");
+
 			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
