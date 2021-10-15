@@ -67,16 +67,16 @@ public class DiscoveryServer extends UdpServer {
 
 		try {
 			// DiscoveryServer port
-			int port = Integer.parseInt(args[0]);
+			int portDS = Integer.parseInt(args[0]);
 			List<RowSwapServer> servers = new ArrayList<>();
 			for (int i = 1; i < args.length; i += 2) {
 				// args[i] nomeFile
 				// args[i+1] porta
 				// controllo dei duplicati, sia file che porta
-				port = Integer.parseInt(args[i + 1]);
+				int port = Integer.parseInt(args[i + 1]);
 				servers.add(new RowSwapServer(port, args[i]));
 			}
-			ds = new DiscoveryServer(port, servers);
+			ds = new DiscoveryServer(portDS, servers);
 			ds.startServers(); // Avvio tutti i server RowSwap
 			ds.start(); // Avvio il server DS
 
