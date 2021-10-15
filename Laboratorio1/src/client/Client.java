@@ -63,6 +63,8 @@ public class Client {
 			// chiudo il socket DS
 			socket.close();
 			char si_no;
+			DatagramSocket socketRS = new DatagramSocket(rsPort, address);
+
 			do {
 				// chiedo al terminale al cliente i numeri delle due righe
 
@@ -73,7 +75,6 @@ public class Client {
 				int numLinea2 = Integer.parseInt(stdIn.readLine());
 
 				// creazione datagramSocket RS (stesso indirizzo , diversa porta)
-				DatagramSocket socketRS = new DatagramSocket(rsPort, address);
 				socket.setSoTimeout(300000);
 				byte[] buffRS = new byte[256];
 				// creazione pacchetto datagram RS
@@ -81,7 +82,7 @@ public class Client {
 
 				// send RowSwap packet
 				// creazione del pacchetto con le informazione di NumRiga
-				// ???
+				// ???D
 				// ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
 				// DataOutputStream dataOutStream = new DataOutputStream(byteOutStream);
 				dataOutStream.writeInt(numLinea1); // numRiga1
@@ -90,12 +91,12 @@ public class Client {
 				// riempimento del pacchetto RS
 				packetRS.setData(dataRS, 0, dataRS.length);
 				// invio del pacchetto al server RS
-				socket.send(packetRS);
+				socketRS.send(packetRS);
 
 				// inizializzaione del pacchetto risposta
 				packet.setData(buffRS);
 				// attesa del pacchetto di risposta
-				socket.receive(packetRS);
+				socketRS.receive(packetRS);
 				// estrazione del pacchetto di ritorno
 				// ByteArrayInputStream byteInStream = new
 				// ByteArrayInputStream(packet.getData(), 0, packet.getLength());
@@ -113,6 +114,7 @@ public class Client {
 			} while (si_no == 'y');
 			// finito il ciclo delle richieste
 			System.out.println("ho finito");
+			socketRS.close();
 			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
