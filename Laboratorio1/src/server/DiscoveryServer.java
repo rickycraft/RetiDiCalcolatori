@@ -34,7 +34,10 @@ public class DiscoveryServer extends UdpServer {
 			// set -1 as an error
 			reply = -1;
 			try {
+				System.out.println(listenSocket.getLocalPort());
+				System.out.println(listenSocket.getLocalAddress());
 				listenSocket.receive(packet);
+				System.out.println("Ricevuto packet");
 				data = new DataInputStream(new ByteArrayInputStream(packet.getData(), 0, packet.getLength())).readUTF();
 				// find the server
 				for (RowSwapServer rs : rsServers) {
@@ -56,25 +59,25 @@ public class DiscoveryServer extends UdpServer {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String arg[]) {
 		DiscoveryServer ds;
 
 		// controllo che siano dispari, coppie per i rowswap + porta del discovery
-		if (((args.length % 2) == 0) || (args.length < 3)) {
+		if (((arg.length % 2) == 0) || (arg.length < 3)) {
 			System.out.println("Usage: java DiscoveryServer portaDS nomeFile1 Porta1 [... nomeFileN PortaN]");
 			System.exit(3);
 		}
 
 		try {
 			// DiscoveryServer port
-			int portDS = Integer.parseInt(args[0]);
+			int portDS = Integer.parseInt(arg[0]);
 			List<RowSwapServer> servers = new ArrayList<>();
-			for (int i = 1; i < args.length; i += 2) {
+			for (int i = 1; i < arg.length; i += 2) {
 				// args[i] nomeFile
 				// args[i+1] porta
 				// controllo dei duplicati, sia file che porta
-				int port = Integer.parseInt(args[i + 1]);
-				servers.add(new RowSwapServer(port, args[i]));
+				int port = Integer.parseInt(arg[i + 1]);
+				servers.add(new RowSwapServer(port, arg[i]));
 			}
 			ds = new DiscoveryServer(portDS, servers);
 			ds.startServers(); // Avvio tutti i server RowSwap
