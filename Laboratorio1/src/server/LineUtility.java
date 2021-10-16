@@ -7,13 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 
 public class LineUtility {
 
 	static int swapLine(String filename, int line1, int line2) {
 
 		if (line1 == line2)
-			return 1; // Non occorre scambi
+			return 1; // Non occorre scambio
 
 		try {
 			String linea1 = LineUtility.getLine(filename, line1);
@@ -65,6 +66,7 @@ public class LineUtility {
 				throw new IOException("line not found");
 			}
 		}
+	
 		in.close();
 		return linea;
 	}
