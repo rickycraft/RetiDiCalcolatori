@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 
 public class LineUtility {
 
@@ -66,7 +65,6 @@ public class LineUtility {
 				throw new IOException("line not found");
 			}
 		}
-	
 		in.close();
 		return linea;
 	}
