@@ -93,6 +93,20 @@ public class DiscoveryServer {
 			System.out.println("Usage: java DiscoveryServer portaDS nomeFile1 Porta1 [... nomeFileN PortaN]");
 			System.exit(3);
 		}
+		// controllo duplicati porta e filename
+		for (int j = 1; j < arg.length; j++) {
+			for (int k = j + 2; k < arg.length; k += 2) {
+				if ((j % 2) == 0) { // se j pari (>1) allora è una porta
+					if (k != j && arg[k] == (arg[j]))
+						System.out.println("trovato porta:" + j + " uguale a porta:" + k);
+					System.exit(3);
+				} else {
+					if (k != j && arg[k].equals(arg[j])) // se j dispari allora è un filename
+						System.out.println("trovato filename:" + j + " uguale a filename:" + k);
+					System.exit(3);
+				}
+			}
+		}
 
 		try {
 			// DiscoveryServer port
@@ -100,7 +114,6 @@ public class DiscoveryServer {
 			RowSwapServer[] servers = new RowSwapServer[(arg.length - 1) / 2];
 			for (int i = 1; i < arg.length; i += 2) {
 				// args[i+1] porta args[i] nomeFile
-				// controllo dei duplicati, sia file che porta
 				servers[(i - 1) / 2] = new RowSwapServer(Integer.parseInt(arg[i + 1]), arg[i]);
 			}
 			ds = new DiscoveryServer(portDS, servers);
