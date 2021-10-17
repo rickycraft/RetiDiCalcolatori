@@ -96,19 +96,22 @@ public class DiscoveryServer {
 		// controllo duplicati porta e filename
 		for (int j = 1; j < arg.length; j++) {
 			for (int k = j + 2; k < arg.length; k += 2) {
-				if ((j % 2) == 0) { // se j pari (>1) allora è una porta
-					if (k != j && arg[k] == (arg[j]))
-						System.out.println("trovato porta:" + j + " uguale a porta:" + k);
+				// se j pari (>1) allora è una porta
+				if (k != j && arg[k] == (arg[j]) && ((j % 2) == 0)) {
+					System.out.println("trovato porta:" + j + " uguale a porta:" + k);
 					System.exit(3);
-				} else {
-					if (k != j && arg[k].equals(arg[j])) // se j dispari allora è un filename
-						System.out.println("trovato filename:" + j + " uguale a filename:" + k);
+				}
+				if (k != j && arg[k].equals(arg[j]) && ((j % 2) == 1)) {
+					// se j dispari allora è un filename
+					System.out.println("trovato filename:" + j + " uguale a filename:" + k);
 					System.exit(3);
 				}
 			}
 		}
 
-		try {
+		try
+
+		{
 			// DiscoveryServer port
 			int portDS = Integer.parseInt(arg[0]);
 			RowSwapServer[] servers = new RowSwapServer[(arg.length - 1) / 2];
