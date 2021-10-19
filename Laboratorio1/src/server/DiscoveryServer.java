@@ -57,7 +57,7 @@ public class DiscoveryServer {
 	private void start() {
 		String data;
 		int reply;
-		System.out.printf("Started at %s:%s", listenSocket.getLocalAddress(), listenSocket.getLocalPort());
+		System.out.printf("Started at %s:%s\n", listenSocket.getLocalAddress(), listenSocket.getLocalPort());
 		while (true) {
 			// set -1 as an error
 			reply = -1;

@@ -16,16 +16,30 @@ public class LineUtility {
 			return 1; // Non occorre scambio
 
 		try {
-			String linea1 = LineUtility.getLine(filename, nlinea1);
-			String linea2 = LineUtility.getLine(filename, nlinea2);
+			String linea1 = null, linea2 = null, lineaCorrente;
+			BufferedReader in = new BufferedReader(new FileReader(filename));
+			int i = 1;
+
+			while ((lineaCorrente = in.readLine()) != null) {
+				if (i == nlinea1) {
+					linea1 = lineaCorrente;
+				} else if (i == nlinea2) {
+					linea2 = lineaCorrente;
+				}
+				i++;
+			}
+			if (linea1 == null || linea2 == null) {
+				in.close();
+				throw new IOException("line not found");
+			}
+			in.close();
 
 			File tmpFile = new File(filename + ".tmp");
 			File inFile = new File(filename);
-			BufferedReader in = new BufferedReader(new FileReader(inFile));
+			in = new BufferedReader(new FileReader(inFile));
 			PrintWriter printWriter = new PrintWriter(new FileWriter(tmpFile));
 
-			int i = 1;
-			String lineaCorrente;
+			i = 1;
 			while ((lineaCorrente = in.readLine()) != null) {
 				if (i == nlinea1) {
 					printWriter.println(linea2);
