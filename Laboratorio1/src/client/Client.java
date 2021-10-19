@@ -65,14 +65,14 @@ public class Client {
 
 			packet = new DatagramPacket(buf, buf.length, address, rsPort);
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
-			String letto;
 			int numLinea1, numLinea2;
+			String letto;
+			System.out.println("ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			while ((letto = stdIn.readLine()) != null) {
 				System.out.println("numero di riga 2");
 				numLinea1 = Integer.parseInt(letto);
 				numLinea2 = Integer.parseInt(stdIn.readLine());
-				System.out.printf("Lette linee %d %d", numLinea1, numLinea2);
+				System.out.printf("Lette linee %d %d \n", numLinea1, numLinea2);
 
 				byteOutStream = new ByteArrayOutputStream();
 				dataOutStream = new DataOutputStream(byteOutStream);
@@ -92,7 +92,7 @@ public class Client {
 				if (rispRS < 0) {
 					System.out.println("errore: righe non scambiate");
 				} else {
-					System.out.println("Lo scambio di righe � avvenuto con successo");
+					System.out.println("Lo scambio di righe e' avvenuto con successo");
 				}
 				System.out.println(" ctrl Z o ctrl D per uscire, altrimenti numero di riga 1");
 			}
