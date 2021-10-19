@@ -58,9 +58,10 @@ public class PutFileClient {
 			byte[] bArray=new byte[(int) dir.length()];
 			FileInputStream fis=new FileInputStream(dir);
 			BufferedInputStream bis=new BufferedInputStream(fis);
+			long lunghezzaFile=0;
 			if(dir.isFile())
 			{
-				if(dir.length()>sizeFile)
+				if((lunghezzaFile=dir.length())>sizeFile)
 				{
 					nomeFile=dir.getName();
 					//Mando il nome del file
@@ -69,6 +70,7 @@ public class PutFileClient {
 					reply=inSock.readUTF();
 					if(reply.equalsIgnoreCase("attiva"))
 					{
+						outSock.writeLong(lunghezzaFile);
 						bArray=bis.readAllBytes();
 						//mando il file
 						outSock.write(bArray);
