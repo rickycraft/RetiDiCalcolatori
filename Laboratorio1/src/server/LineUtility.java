@@ -1,7 +1,7 @@
 package server;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -10,42 +10,39 @@ import java.io.PrintWriter;
 
 public class LineUtility {
 
-	static int swapLine(String filename, int line1, int line2) {
+	static int swapLine(String filename, int nlinea1, int nlinea2) {
 
-		if (line1 == line2)
+		if (nlinea1 == nlinea2)
 			return 1; // Non occorre scambio
 
 		try {
-			String linea1 = LineUtility.getLine(filename, line1);
-			String linea2 = LineUtility.getLine(filename, line2);
+			String linea1 = LineUtility.getLine(filename, nlinea1);
+			String linea2 = LineUtility.getLine(filename, nlinea2);
 
-			BufferedReader in = new BufferedReader(new FileReader(filename));
-			StringBuilder out = new StringBuilder();
+			File tmpFile = new File(filename + ".tmp");
+			File inFile = new File(filename);
+			BufferedReader in = new BufferedReader(new FileReader(inFile));
+			PrintWriter printWriter = new PrintWriter(new FileWriter(tmpFile));
+
 			int i = 1;
-			boolean scambio1 = false;
-			boolean scambio2 = false;
 			String lineaCorrente;
 			while ((lineaCorrente = in.readLine()) != null) {
-				if (i == line1) {
-					out.append(linea2 + "\n");
-					scambio1 = true;
+				if (i == nlinea1) {
+					printWriter.println(linea2);
+				} else if (i == nlinea2) {
+					printWriter.println(linea1);
 				} else {
-					if (i == line2) {
-						out.append(linea1 + "\n");
-						scambio2 = true;
-					} else {
-						out.append(lineaCorrente + "\n");
-					}
+					printWriter.println(lineaCorrente);
 				}
 				i++;
 			}
 
-			PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
-			fout.write(out.toString());
-			fout.close();
+			printWriter.close();
 			in.close();
+			inFile.delete();
+			tmpFile.renameTo(inFile);
 
-			return (scambio1 == true && scambio2 == true) ? 1 : -1;
+			return 1;
 		} catch (FileNotFoundException e) {
 			System.err.println("Non ho trovato il file");
 		} catch (IOException e) {
