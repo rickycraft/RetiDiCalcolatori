@@ -4,7 +4,7 @@ import java.net.*;
 
 import java.io.*;
 
-public class PutFileClient {
+public class Client {
 
 	//voglio in ingresso ip, porta , limiteMinFile e directory 
 	public static void main(String[] args) throws IOException {
