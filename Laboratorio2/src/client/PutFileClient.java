@@ -8,12 +8,12 @@ public class PutFileClient {
 
 	//voglio in ingresso ip, porta , limiteMinFile e directory 
 	public static void main(String[] args) throws IOException {
-   
+
 		InetAddress addr = null;
 		int port = -1;
 		String directory=null;
 		long sizeFile=-1;
-		
+
 		try{ //check args
 			if(args.length != 4){
 				System.out.println("Usage: java PutFileClient serverAddr serverPort directory grandezzaMinFile");
@@ -26,8 +26,8 @@ public class PutFileClient {
 				directory=args[2];
 				sizeFile=Integer.parseInt(args[3]);
 			}
-			
-		
+
+
 		} //try
 		// Per esercizio si possono dividere le diverse eccezioni
 		catch(Exception e){
@@ -36,15 +36,15 @@ public class PutFileClient {
 			System.out.println("Usage: java PutFileClient serverAddr serverPort");
 			System.exit(2);
 		}
-		
+
 		// oggetti utilizzati dal client per la comunicazione e la lettura del file
 		// locale
 		Socket socket = new Socket(addr,port);
 		socket.setSoTimeout(300000);
 		if(!socket.isConnected())
 		{
-		System.out.println("Socket non connesso al server");
-		System.exit(-1);
+			System.out.println("Socket non connesso al server");
+			System.exit(-1);
 		}
 		File direct=new File(directory);
 		String nomeFile;
@@ -52,17 +52,17 @@ public class PutFileClient {
 		DataInputStream inSock=new DataInputStream(socket.getInputStream());
 		DataOutputStream outSock=new DataOutputStream(socket.getOutputStream());
 		String reply;
-		
+
 		for(File dir : direct.listFiles())
 		{
-			byte[] bArray=new byte[(int) dir.length()];
-			FileInputStream fis=new FileInputStream(dir);
-			BufferedInputStream bis=new BufferedInputStream(fis);
-			long lunghezzaFile=0;
+
 			if(dir.isFile())
 			{
-				if((lunghezzaFile=dir.length())>sizeFile)
+				if(dir.length()>sizeFile)
 				{
+					
+					FileInputStream fis=new FileInputStream(dir);
+					long lunghezzaFile=dir.length();
 					nomeFile=dir.getName();
 					//Mando il nome del file
 					outSock.writeUTF(nomeFile);
@@ -71,16 +71,18 @@ public class PutFileClient {
 					if(reply.equalsIgnoreCase("attiva"))
 					{
 						outSock.writeLong(lunghezzaFile);
-						bArray=bis.readAllBytes();
-						//mando il file
-						outSock.write(bArray);
-						bis.close();	
+						int buffer;
+						while ((buffer=fis.read()) >= 0) {
+							outSock.write(buffer);
+							fis.close();	
+						}
+						outSock.flush();
 					}		
 				}
 			}
 		}
 		socket.close();
-		
-		
+
+
 	} // main
 } // PutFileClient
