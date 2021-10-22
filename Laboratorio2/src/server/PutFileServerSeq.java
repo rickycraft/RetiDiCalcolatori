@@ -124,6 +124,7 @@ public class PutFileServerSeq {
 				// se ATTIVA ricevo il file
 				if (esito.equals(ACCEPT)) {
 					try {
+						int fileDim= inSock.readInt();
 						outFile = new FileOutputStream(nomeFile);
 						System.out.println("Ricevo il file " + nomeFile + ": \n");
 						FileUtility.trasferisci_a_byte_file_binario(inSock, new DataOutputStream(outFile));
