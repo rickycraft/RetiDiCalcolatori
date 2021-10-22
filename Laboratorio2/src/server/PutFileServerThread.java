@@ -2,6 +2,7 @@ package server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,73 +32,70 @@ class PutFileServerThread extends Thread {
 		DataOutputStream outSock;
 		FileOutputStream outFile = null;
 		String esito;
+		File f;
 
 		// creazione stream di input e out da socket
 		try {
 			inSock = new DataInputStream(clientSocket.getInputStream());
 			outSock = new DataOutputStream(clientSocket.getOutputStream());
-			nomeFile = inSock.readUTF();
-		} catch (SocketTimeoutException ste) {
-			System.out.println("Timeout scattato: ");
-			ste.printStackTrace();
-			clientSocket.close();
-			System.out.print("\n^D(Unix)/^Z(Win)+invio per uscire, solo invio per continuare: ");
-			return;
-		} catch (IOException ioe) {
-			System.out.println("Problemi nella creazione degli stream di input/output " + "su socket: ");
-			ioe.printStackTrace();
-			// il server continua l'esecuzione riprendendo dall'inizio del ciclo
-			return;
 		} catch (Exception e) {
 			System.out.println("Problemi nella creazione degli stream di input/output " + "su socket: ");
 			e.printStackTrace();
 			return;
 		}
 
-		// controllo se il file esiste già
-		if (nomeFile == null) {
-			System.out.println("Problemi nella ricezione del nome del file: ");
-			clientSocket.close();
-			return;
-		} else {
+		while (clientSocket.isConnected()) {
+			// ricezione nome file
 			try {
-				esito = (new File(nomeFile).exists()) ? REJECT : ACCEPT;
-				outSock.writeUTF(esito); // invio esito a cliente SALTA
-			} catch (IOException e) {
-				System.out.println("Problemi nella notifica di file esistente: ");
-				e.printStackTrace();
-				return;
-			}
-		}
-
-		// se ATTIVA ricevo il file
-		if (esito.equals(ACCEPT)) {
-			try {
-				outFile = new FileOutputStream(nomeFile);
-				System.out.println("Ricevo il file " + nomeFile + ": \n");
-				FileUtility.trasferisci_a_byte_file_binario(inSock, new DataOutputStream(outFile));
-				System.out.println("\nRicezione del file " + nomeFile + " terminata\n");
-				// ritorno esito positivo al client
-				outSock.writeUTF(esito + ", file salvato lato server");
-				System.out.println("\nTerminata connessione con " + clientSocket);
-			} catch (SocketTimeoutException ste) {
-				System.out.println("Timeout scattato: ");
-				ste.printStackTrace();
-				System.out.print("\n^D(Unix)/^Z(Win)+invio per uscire, solo invio per continuare: ");
-				return;
-			} catch (Exception e) {
-				System.err.println("\nProblemi durante la ricezione e scrittura del file: " + e.getMessage());
-				e.printStackTrace();
-				System.out.println("Terminata connessione con " + clientSocket);
-				return;
-			} finally {
-				outFile.close(); // chiusura file
-				clientSocket.shutdownInput(); // chiusura socket (downstream)
-				clientSocket.shutdownOutput(); // chiusura socket (upstream)
+				nomeFile = inSock.readUTF();
+			} catch (EOFException e) {
+				System.out.println("Socket chiusa dal client");
+				clientSocket.shutdownInput();
+				clientSocket.shutdownOutput();
 				clientSocket.close();
+				break;
 			}
+
+			// controllo se il file esiste già
+			if (nomeFile == null) {
+				System.out.println("Problemi nella ricezione del nome del file: ");
+				clientSocket.close();
+				continue;
+			} else {
+				f = new File(nomeFile);
+				esito = (f.exists()) ? REJECT : ACCEPT;
+				try {
+					outSock.writeUTF(esito); // invio esito a cliente SALTA
+				} catch (Exception e) {
+					System.out.println("Problemi nella notifica di file esistente: ");
+					e.printStackTrace();
+					continue;
+				}
+			}
+
+			// se ATTIVA ricevo il file
+			if (esito.equals(ACCEPT)) {
+				try {
+					long fileDim = inSock.readLong();
+					outFile = new FileOutputStream(nomeFile);
+					System.out.printf("Inizio ricezione <%s>...", nomeFile);
+					FileUtility.trasferisci_a_byte_file_binario(inSock, new DataOutputStream(outFile), fileDim);
+					System.out.println("terminata");
+				} catch (SocketTimeoutException ste) {
+					System.out.println("Timeout scattato: ");
+					ste.printStackTrace();
+					System.out.print("\n^D(Unix)/^Z(Win)+invio per uscire, solo invio per continuare: ");
+					continue;
+				} catch (Exception e) {
+					System.err.println("\nProblemi durante la ricezione e scrittura del file: " + e.getMessage());
+					e.printStackTrace();
+					System.out.println("Terminata connessione con " + clientSocket);
+					continue;
+				} finally {
+					outFile.close(); // chiusura file
+				}
+			} // if (esito.equals(ACCEPT))
 		}
-		// salta non faccio niente
 	}
 
 	@Override

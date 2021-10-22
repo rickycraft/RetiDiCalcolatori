@@ -12,25 +12,23 @@ import java.net.Socket;
 import utility.FileUtility;
 
 public class Client {
-	private static final String USAGE = "Usage: java PutFileClient serverAddr serverPort directory grandezzaMinFile";
+	private static final String USAGE = "Usage: java PutFileClient serverAddr serverPort grandezzaMinFile directory";
 
 	// voglio in ingresso ip, porta , limiteMinFile e directory
 	public static void main(String[] args) throws IOException {
 
 		InetAddress addr = null;
 		int port = -1;
-		String directory = null;
 		long maxFileSize = -1;
 
 		try { // check args
-			if (args.length != 4) {
+			if (args.length < 4) {
 				System.out.println(USAGE);
 				System.exit(1);
 			} else {
 				addr = InetAddress.getByName(args[0]);
 				port = Integer.parseInt(args[1]);
-				directory = args[2];
-				maxFileSize = Integer.parseInt(args[3]);
+				maxFileSize = Integer.parseInt(args[2]);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,23 +47,25 @@ public class Client {
 		DataOutputStream outSock = new DataOutputStream(socket.getOutputStream());
 		FileInputStream fis;
 
-		File dir = new File(directory);
-		for (File f : dir.listFiles()) {
-			if (f.isFile()) {
-				if (f.length() > maxFileSize) {
-					outSock.writeUTF(f.getName()); // mando il nome del file
-					outSock.flush();
-					System.out.printf("Mando il nome del file %s\n", f.getName());
-					// ricevo risposta e scrivo il file
-					if (inSock.readUTF().equalsIgnoreCase("attiva")) {
-						outSock.writeLong(f.length());
-						fis = new FileInputStream(f);
-						System.out.print("Inizio il trasferimento del file...");
-						FileUtility.trasferisci_a_byte_file_binario(new DataInputStream(fis), outSock);
-						System.out.println("terminato");
-						fis.close();
-					} else {
-						System.out.println("File non accettato dal server");
+		for (int i = 3; i < args.length; i++) {
+			File dir = new File(args[i]);
+			for (File f : dir.listFiles()) {
+				if (f.isFile()) {
+					if (f.length() > maxFileSize) {
+						outSock.writeUTF(f.getName()); // mando il nome del file
+						outSock.flush();
+						System.out.printf("Mando il nome del file %s\n", f.getName());
+						// ricevo risposta e scrivo il file
+						if (inSock.readUTF().equalsIgnoreCase("attiva")) {
+							outSock.writeLong(f.length());
+							fis = new FileInputStream(f);
+							System.out.print("Inizio il trasferimento del file...");
+							FileUtility.trasferisci_a_byte_file_binario(new DataInputStream(fis), outSock);
+							System.out.println("terminato");
+							fis.close();
+						} else {
+							System.out.println("File non accettato dal server");
+						}
 					}
 				}
 			}

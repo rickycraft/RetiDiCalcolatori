@@ -134,9 +134,8 @@ public class PutFileServerSeq {
 						} finally {
 							outFile.close(); // chiusura file
 						}
-					}
-				}
-				// salta non faccio niente
+					} // if (esito.equals(ACCEPT))
+				} // while (socket.isConnected)
 			} // while (true)
 
 		}

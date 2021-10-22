@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class PutFileServerCon {
-	public static int port = 1050; // default port
+	public static int port = 6000; // default port
 
 	public static void main(String[] args) throws IOException {
 
@@ -30,6 +30,8 @@ public class PutFileServerCon {
 			System.out.println("Usage: java PutFileServerThread or java PutFileServerThread port");
 			System.exit(1);
 		}
+
+		startServer();
 	}
 
 	public static void startServer() {
@@ -49,14 +51,14 @@ public class PutFileServerCon {
 
 		try {
 			while (true) {
-				System.out.println("Server: in attesa di richieste...\n");
+				System.out.print("\nServer: in attesa di richieste...");
 				try {
 					// bloccante fino ad una pervenuta connessione
 					clientSocket = serverSocket.accept();
 					clientSocket.setSoTimeout(30000);
-					System.out.println("Server: connessione accettata: " + clientSocket);
+					System.out.println("connessione accettata: " + clientSocket);
 				} catch (Exception e) {
-					System.err.println("Server: problemi nella accettazione della connessione: " + e.getMessage());
+					System.err.println("problemi nella accettazione della connessione: " + e.getMessage());
 					e.printStackTrace();
 					continue;
 				}
