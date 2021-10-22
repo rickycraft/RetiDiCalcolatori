@@ -1,88 +1,71 @@
 // PutFileClient.java
 package client;
-import java.net.*;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import utility.FileUtility;
 
 public class Client {
+	private static final String USAGE = "Usage: java PutFileClient serverAddr serverPort directory grandezzaMinFile";
 
-	//voglio in ingresso ip, porta , limiteMinFile e directory 
+	// voglio in ingresso ip, porta , limiteMinFile e directory
 	public static void main(String[] args) throws IOException {
 
 		InetAddress addr = null;
 		int port = -1;
-		String directory=null;
-		long sizeFile=-1;
+		String directory = null;
+		long maxFileSize = -1;
 
-		try{ //check args
-			if(args.length != 4){
-				System.out.println("Usage: java PutFileClient serverAddr serverPort directory grandezzaMinFile");
+		try { // check args
+			if (args.length != 4) {
+				System.out.println(USAGE);
 				System.exit(1);
-			}
-			else
-			{
-				addr = InetAddress.getByName(args[0]);	
+			} else {
+				addr = InetAddress.getByName(args[0]);
 				port = Integer.parseInt(args[1]);
-				directory=args[2];
-				sizeFile=Integer.parseInt(args[3]);
+				directory = args[2];
+				maxFileSize = Integer.parseInt(args[3]);
 			}
-
-
-		} //try
-		// Per esercizio si possono dividere le diverse eccezioni
-		catch(Exception e){
-			System.out.println("Problemi, i seguenti: ");
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Usage: java PutFileClient serverAddr serverPort");
+			System.out.println(USAGE);
 			System.exit(2);
 		}
 
-		// oggetti utilizzati dal client per la comunicazione e la lettura del file
-		// locale
-		Socket socket = new Socket(addr,port);
+		Socket socket = new Socket(addr, port);
 		socket.setSoTimeout(300000);
-		if(!socket.isConnected())
-		{
+		if (!socket.isConnected()) {
 			System.out.println("Socket non connesso al server");
 			System.exit(-1);
 		}
-		File direct=new File(directory);
-		String nomeFile;
-		System.out.printf("IP e porta messi nella socket: %s %d",addr.getAddress().toString() , port);
-		DataInputStream inSock=new DataInputStream(socket.getInputStream());
-		DataOutputStream outSock=new DataOutputStream(socket.getOutputStream());
-		String reply;
 
-		for(File dir : direct.listFiles())
-		{
+		DataInputStream inSock = new DataInputStream(socket.getInputStream());
+		DataOutputStream outSock = new DataOutputStream(socket.getOutputStream());
+		FileInputStream fis;
 
-			if(dir.isFile())
-			{
-				if(dir.length()>sizeFile)
-				{
-					
-					FileInputStream fis=new FileInputStream(dir);
-					long lunghezzaFile=dir.length();
-					nomeFile=dir.getName();
-					//Mando il nome del file
-					outSock.writeUTF(nomeFile);
-					//Ricevo risposta
-					reply=inSock.readUTF();
-					if(reply.equalsIgnoreCase("attiva"))
-					{
-						outSock.writeLong(lunghezzaFile);
-						int buffer;
-						while ((buffer=fis.read()) >= 0) {
-							outSock.write(buffer);
-							fis.close();	
-						}
-						outSock.flush();
-					}		
+		File dir = new File(directory);
+		for (File f : dir.listFiles()) {
+			if (f.isFile()) {
+				if (f.length() > maxFileSize) {
+					outSock.writeUTF(f.getName()); // mando il nome del file
+					outSock.flush();
+					// ricevo risposta e scrivo il file
+					if (inSock.readUTF().equalsIgnoreCase("attiva")) {
+						// outSock.writeLong(f.length());
+						fis = new FileInputStream(f);
+						FileUtility.trasferisci_a_byte_file_binario(new DataInputStream(fis), outSock);
+						fis.close();
+					}
 				}
 			}
 		}
 		socket.close();
-
 
 	} // main
 } // PutFileClient
