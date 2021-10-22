@@ -14,17 +14,39 @@ public class FileUtility {
 	 *
 	 */
 	private static int BUFFER_SIZE = 1024;
+
 	public static void trasferisci_a_byte_file_binario(DataInputStream src, DataOutputStream dest) throws IOException {
 
 		// ciclo di lettura da sorgente e scrittura su destinazione
-		byte buffer[]=new byte[BUFFER_SIZE];
+		byte buffer[] = new byte[BUFFER_SIZE];
 		int nRead;
 		try {
 			// esco dal ciclo all lettura di un valore negativo -> EOF
 			// N.B.: la funzione consuma l'EOF
-			while ((nRead =src.read(buffer,0,buffer.length) )>= 0) {
-				dest.write(buffer,0,nRead);
+			while ((nRead = src.read(buffer, 0, buffer.length)) >= 0) {
+				dest.write(buffer, 0, nRead);
 			}
+			dest.flush();
+		} catch (EOFException e) {
+			System.out.println("Problemi, i seguenti: ");
+			e.printStackTrace();
+		}
+	}
+
+	public static void trasferisci_a_byte_file_binario(DataInputStream src, DataOutputStream dest, long byteToRead)
+			throws IOException {
+
+		// ciclo di lettura da sorgente e scrittura su destinazione
+		byte buffer[] = new byte[BUFFER_SIZE];
+		int nTimes = (int) byteToRead / BUFFER_SIZE;
+		int resto = (int) byteToRead % BUFFER_SIZE;
+		try {
+			for (int i = 0; i < nTimes; i++) {
+				src.read(buffer, 0, BUFFER_SIZE);
+				dest.write(buffer, 0, BUFFER_SIZE);
+			}
+			src.read(buffer, 0, resto);
+			dest.write(buffer, 0, resto);
 			dest.flush();
 		} catch (EOFException e) {
 			System.out.println("Problemi, i seguenti: ");
