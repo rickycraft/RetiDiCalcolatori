@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-	int sd, port, fd_sorg, fd_dest, nread;
+	int sd, port, fd_sorg, fd_dest;
 	char buff[DIM_BUFF];
 	// FILENAME_MAX: lunghezza massima nome file. Costante di sistema.
 	char nome_sorg[FILENAME_MAX+1], nome_dest[FILENAME_MAX+1];
@@ -34,14 +34,7 @@ int main(int argc, char *argv[])
 	host = gethostbyname(argv[1]);
 
 	/*VERIFICA INTERO*/
-	nread=0;
-	while( argv[2][nread]!= '\0' ){
-		if( (argv[2][nread] < '0') || (argv[2][nread] > '9') ){
-			printf("Secondo argomento non intero\n");
-			exit(2);
-		}
-		nread++;
-	}
+
 	port = atoi(argv[2]);
 
 	/* VERIFICA PORT e HOST */
@@ -59,15 +52,10 @@ int main(int argc, char *argv[])
 
 	/* CORPO DEL CLIENT:
 	ciclo di accettazione di richieste da utente ------- */
-	printf("Ciclo di richieste di ordinamento fino a EOF\n");
-	printf("Nome del file da ordinare, EOF per terminare: ");
+	printf("Inserire nome del file: \n");
 
-	/* ATTENZIONE!!
-	* Cosa accade se la riga e' piu' lunga di FILENAME_MAX-1?
-	* Stesso dicasi per le altre gets...
-	* Come si potrebbe risolvere il problema?
-	*/
-	while (gets(nome_sorg)){
+	
+	while (fgets(nome_sorg,FILENAME_MAX,stdin)){
 		printf("File da aprire: __%s__\n", nome_sorg);
 
 		/* Verifico l'esistenza del file */
