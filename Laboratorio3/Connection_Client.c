@@ -11,19 +11,20 @@
 #include <netdb.h>
 
 #define DIM_BUFF 256
+#define LENGTH 100
 
 int main(int argc, char *argv[])
 {
-	int sd, port, fd_sorg, fd_dest;
+	int sd, port, fd_sorg, nread, fd_dest;
 	char buff[DIM_BUFF];
 	// FILENAME_MAX: lunghezza massima nome file. Costante di sistema.
-	char nome_sorg[FILENAME_MAX+1], nome_dest[FILENAME_MAX+1];
+	char nome_sorg[FILENAME_MAX + 1], nome_dest[FILENAME_MAX + 1];
 	struct hostent *host;
 	struct sockaddr_in servaddr;
 
-
 	/* CONTROLLO ARGOMENTI ---------------------------------- */
-	if(argc!=3){
+	if (argc != 3)
+	{
 		printf("Error:%s serverAddress serverPort\n", argv[0]);
 		exit(1);
 	}
@@ -38,15 +39,19 @@ int main(int argc, char *argv[])
 	port = atoi(argv[2]);
 
 	/* VERIFICA PORT e HOST */
-	if (port < 1024 || port > 65535){
+	if (port < 1024 || port > 65535)
+	{
 		printf("%s = porta scorretta...\n", argv[2]);
 		exit(2);
 	}
-	if (host == NULL){
+	if (host == NULL)
+	{
 		printf("%s not found in /etc/hosts\n", argv[1]);
 		exit(2);
-	}else{
-		servaddr.sin_addr.s_addr=((struct in_addr *)(host->h_addr))->s_addr;
+	}
+	else
+	{
+		servaddr.sin_addr.s_addr = ((struct in_addr *)(host->h_addr))->s_addr;
 		servaddr.sin_port = htons(port);
 	}
 
@@ -54,63 +59,81 @@ int main(int argc, char *argv[])
 	ciclo di accettazione di richieste da utente ------- */
 	printf("Inserire nome del file: \n");
 
-	
-	while (fgets(nome_sorg,FILENAME_MAX,stdin)){
+	while (fgets(nome_sorg, FILENAME_MAX, stdin) != EOF)
+	{
 		printf("File da aprire: __%s__\n", nome_sorg);
 
 		/* Verifico l'esistenza del file */
-		if((fd_sorg=open(nome_sorg, O_RDONLY))<0){
-			perror("open file sorgente"); 
-			printf("Qualsiasi tasto per procedere, EOF per fine: ");
+		if ((fd_sorg = open(nome_sorg, O_RDWR)) < 0)
+		{
+			perror("open file sorgente");
+			printf("Qualsiasi tasto per procedere, EOF per fine: \n");
 			continue;
 		}
-		printf("Nome del file ordinato: ");
-		if (gets(nome_dest)==0) break;
+		char valore[LENGTH];
+		printf("Riga da eliminare\n ");
+		fgets(valore, LENGTH, stdin);
+		int val = atoi(valore);
+		if (val == 0)
+		{
+			printf("Hai inserito una riga non corretta");
+			exit(-1);
+		}
 
 		/*Verifico creazione file*/
-		if((fd_dest=open(nome_dest, O_WRONLY|O_CREAT, 0644))<0){
+		/*if((fd_dest=open(nome_dest, O_WRONLY|O_CREAT, 0644))<0){
 			perror("open file destinatario");
 			printf("Nome del file da ordinare, EOF per terminare: ");
 			continue;
 		}
-
+		*/
 		/* CREAZIONE SOCKET ------------------------------------ */
-		sd=socket(AF_INET, SOCK_STREAM, 0);
-		if(sd<0) {perror("apertura socket"); exit(1);}
+		sd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sd < 0)
+		{
+			perror("apertura socket");
+			exit(1);
+		}
 		printf("Client: creata la socket sd=%d\n", sd);
 
 		/* Operazione di BIND implicita nella connect */
-		if(connect(sd,(struct sockaddr *) &servaddr, sizeof(struct sockaddr))<0)
-		{perror("connect"); exit(1);}
+		if (connect(sd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) < 0)
+		{
+			perror("connect");
+			exit(1);
+		}
 		printf("Client: connect ok\n");
 
 		/*INVIO File*/
-		printf("Client: stampo e invio file da ordinare\n");
-		while((nread=read(fd_sorg, buff, DIM_BUFF))>0){
-			write(1,buff,nread);	//stampa
-			write(sd,buff,nread);	//invio
+		printf("Client:invio riga da eliminare\n");
+		write(sd,valore,LENGTH);
+
+		printf("Client: invio contenuto del file");
+		while ((nread = read(fd_sorg, buff, DIM_BUFF)) > 0)
+		{
+				//stampa
+			write(sd, buff, nread); //invio
 		}
 		printf("Client: file inviato\n");
 		/* Chiusura socket in spedizione -> invio dell'EOF */
-		shutdown(sd,1);
+		shutdown(sd, 1);
 
 		/*RICEZIONE File*/
-		printf("Client: ricevo e stampo file ordinato\n");
-		while((nread=read(sd,buff,DIM_BUFF))>0){
-			write(fd_dest,buff,nread);
-			write(1,buff,nread);
+		printf("Client: ricevo e stampo file\n");
+		while ((nread = read(sd, buff, DIM_BUFF)) > 0)
+		{
+			write(fd_sorg, buff, nread);
+			write(1, buff, nread);
 		}
 		printf("Traspefimento terminato\n");
 		/* Chiusura socket in ricezione */
 		shutdown(sd, 0);
 		/* Chiusura file */
 		close(fd_sorg);
-		close(fd_dest);
 		close(sd);
 
 		printf("Nome del file da ordinare, EOF per terminare: ");
-	}//while
+	} //while
 	printf("\nClient: termino...\n");
 	exit(0);
 }
-
