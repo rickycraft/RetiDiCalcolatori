@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv)
 {
-	int sd, port, len, num1, num2, ris;
+	int sd, port, len, ris;
 	const int on = 1;
 	struct sockaddr_in cliaddr, servaddr;
 	struct hostent *clienthost;
@@ -84,6 +84,7 @@ int main(int argc, char **argv)
 		if ((fd = open(nomeFile, O_RDONLY)) < 0)
 		{
 			printf("errore apertura file");
+			ris=-1;
 		}
 		else
 		{

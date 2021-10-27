@@ -89,8 +89,15 @@ int main(int argc, char **argv)
 		printf("Attesa del risultato...\n");
 		if (recvfrom(sd, &ris, sizeof(ris), 0, (struct sockaddr *)&servaddr, &len)<0){
 			perror("recvfrom"); continue;}
-
-		printf("La parola piu lunga ha %d caratteri\n", (int)ntohl(ris));
+		ris=(int)ntohl(ris);
+		if(ris<0)
+		{
+			printf("c'e' stato un errore nell'esecuzione della richiesta\n");
+		}
+		else
+		{
+			printf("La parola piu lunga ha %d caratteri\n", (int)ntohl(ris));
+		}
 
 		printf("vuoi continuare col ciclo? [y/n] \n");
 		scanf("%c", &carattereFineCiclo);
