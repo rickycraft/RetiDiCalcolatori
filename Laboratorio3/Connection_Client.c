@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
 			printf("Qualsiasi tasto per procedere, EOF per fine: \n");
 			continue;
 		}
+		//prova
 		/*RICEZIONE File*/
 		printf("Client: ricevo e stampo file\n");
 		while ((nread = read(sd, buff, DIM_BUFF)) > 0)
