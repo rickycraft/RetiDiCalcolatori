@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 		if (clienthost == NULL)
 			printf("client host information not found\n");
 		else
-			printf("nome richiesto %s da: %s %i\n ", nomeFile, clienthost->h_name, (unsigned)ntohs(cliaddr.sin_port));
+			printf("file richiesto %s da: %s %i\n ", nomeFile, clienthost->h_name, (unsigned)ntohs(cliaddr.sin_port));
 
 		//Esecuzione conteggio parola più lunga del file
 		int fd;
@@ -91,17 +91,20 @@ int main(int argc, char **argv)
 			int maxL = 0;
 			int count = 0;
 			char ch;
-			while ((ch = read(fd, &ch, sizeof(char))) > 0)
+			while ((read(fd, &ch, sizeof(char))) > 0)
 			{
-				if (ch != '\n' && ch != ' ')
+				if (ch != '\n' && ch != ' ' && ch!='\r')
 				{
 					count++;
+					//printf("IL CARATTERE LETTO: %c \n",ch);
 				}
 				else
 				{
-					if (maxL < count)
+					if (maxL <= count)
 					{
+						printf("IL CARATTERE LETTO: %d \n",ch);
 						maxL = count;
+						printf("Update di maxL con %d\n",count);
 					}
 					count = 0;
 				}
@@ -109,7 +112,8 @@ int main(int argc, char **argv)
 			ris = maxL;
 		}
 
-		ris = htonl(ris);
+		//ris = htonl(ris);
+		printf("Il risultato dell'esecuzione del server: %d\n",ris);
 		if (sendto(sd, &ris, sizeof(ris), 0, (struct sockaddr *)&cliaddr, len) < 0)
 		{
 			perror("sendto ");

@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 	servaddr.sin_family = AF_INET;
 	host = gethostbyname (argv[1]);
 
+	port=atoi(argv[2]);
 	/* VERIFICA PORT e HOST */
 	if (port < 1024 || port > 65535){
 		printf("%s = porta scorretta...\n", argv[2]);
@@ -72,11 +73,13 @@ int main(int argc, char **argv)
 	*/
 
 	char nomeFile[LINE_LENGTH]; 
-	char carattereFineCiclo;
-	do
+	char carattereFineCiclo[2];
+	printf("Inserisci il nome del file remoto\n");
+	while (gets(nomeFile))
 	{
-		printf("Inserisci il nome del file remoto\n");
-		fgets(nomeFile, LINE_LENGTH,stdin);
+		
+		//printf("Inserisci il nome del file remoto\n");
+		//gets(nomeFile);
     	// quando arrivo qui l'input e' stato letto correttamente
 		printf("Stringa letta: %s\n", nomeFile);
 		/* richiesta operazione */
@@ -89,21 +92,28 @@ int main(int argc, char **argv)
 		printf("Attesa del risultato...\n");
 		if (recvfrom(sd, &ris, sizeof(ris), 0, (struct sockaddr *)&servaddr, &len)<0){
 			perror("recvfrom"); continue;}
-		ris=(int)ntohl(ris);
+		//ris=(int)ntohl(ris);
 		if(ris<0)
 		{
 			printf("c'e' stato un errore nell'esecuzione della richiesta\n");
 		}
 		else
 		{
-			printf("La parola piu lunga ha %d caratteri\n", (int)ntohl(ris));
+			printf("La parola piu lunga ha %d caratteri\n", ris);
 		}
 
-		printf("vuoi continuare col ciclo? [y/n] \n");
-		scanf("%c", &carattereFineCiclo);
+		printf("vuoi continuare col ciclo? [y/n]\n");
+		gets(carattereFineCiclo);
+		if(carattereFineCiclo[0]!='y')
+		{
+			break;
+		}
+		else
+		{
+			printf("Inserisci il nome del file\n");
+		}
 
-	} 
-	while ( carattereFineCiclo=='y'); // while gets
+	} // while gets
 	
 	//CLEAN OUT
 	close(sd);
