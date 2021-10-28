@@ -15,7 +15,7 @@
 
 int main(int argc, char *argv[])
 {
-	int sd, port, fd_sorg, nread, fd_dest;
+	int sd, port, fd_sorg, nread;
 	char buff[DIM_BUFF];
 	// FILENAME_MAX: lunghezza massima nome file. Costante di sistema.
 	char nome_sorg[FILENAME_MAX + 1], nome_dest[FILENAME_MAX + 1];
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		printf("File da aprire: __%s__\n", nome_sorg);
 
 		/* Verifico l'esistenza del file */
-		if ((fd_sorg = open(nome_sorg, O_RDWR)) < 0)
+		if ((fd_sorg = open(nome_sorg, O_RDONLY)) < 0)
 		{
 			perror("open file sorgente");
 			printf("Qualsiasi tasto per procedere, EOF per fine: \n");
@@ -115,9 +115,17 @@ int main(int argc, char *argv[])
 			write(sd, buff, nread); //invio
 		}
 		printf("Client: file inviato\n");
-		/* Chiusura socket in spedizione -> invio dell'EOF */
+		/* Chiusura socket in output/scrittura -> invio dell'EOF */
 		shutdown(sd, 1);
+		close(fd_sorg); // chiusura file in lettura
 
+		/* apro file in scrittura */
+		if ((fd_sorg = open(nome_sorg, O_WRONLY)) < 0)
+		{
+			perror("open file sorgente in scrittura");
+			printf("Qualsiasi tasto per procedere, EOF per fine: \n");
+			continue;
+		}
 		/*RICEZIONE File*/
 		printf("Client: ricevo e stampo file\n");
 		while ((nread = read(sd, buff, DIM_BUFF)) > 0)
@@ -125,12 +133,12 @@ int main(int argc, char *argv[])
 			write(fd_sorg, buff, nread);
 			write(1, buff, nread);
 		}
-		printf("Traspefimento terminato\n");
+		printf("Trasfefimento terminato\n");
 		/* Chiusura socket in ricezione */
 		shutdown(sd, 0);
 		/* Chiusura file */
 		close(fd_sorg);
-		close(sd);
+		close(sd);//chiudo socket
 
 		printf("Nome del file da ordinare, EOF per terminare: ");
 	} //while
