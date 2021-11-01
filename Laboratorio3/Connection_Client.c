@@ -1,14 +1,14 @@
 /* Client per richiedere l'ordinamento remoto di un file */
 
+#include <fcntl.h>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #define DIM_BUFF 256
 #define LENGTH 100
@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
 		/*INVIO File*/
 		//printf("Invio nome file %d\n", write(sd, nome_sorg, FILENAME_MAX));
-		printf("Client:invio riga da eliminare\n");
-		val=htons(val);
+		printf("Client: invio riga da eliminare\n");
+		val = htons(val);
 		write(sd, &val, sizeof(int));
 
 		printf("Client: invio contenuto del file\n");
