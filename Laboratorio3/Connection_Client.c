@@ -71,10 +71,10 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		char valore[LENGTH];
-		printf("Riga da eliminare\n ");
+		printf("Riga da eliminare (considerando che la prima riga sia la 1)\n ");
 		gets(valore);
 		int val = atoi(valore);
-		if (val == 0)
+		if (val < 1)
 		{
 			printf("Hai inserito una riga non corretta");
 			exit(-1);
@@ -108,14 +108,13 @@ int main(int argc, char *argv[])
 		/*INVIO File*/
 		//printf("Invio nome file %d\n", write(sd, nome_sorg, FILENAME_MAX));
 		printf("Client: invio riga da eliminare\n");
-		val = htons(val);
+		//val = htons(val);
 		write(sd, &val, sizeof(int));
 
 		printf("Client: invio contenuto del file\n");
 		while ((nread = read(fd_sorg, buff, DIM_BUFF)) > 0)
 		{
 			//stampa
-			//printf("%s",&buff); check per vedere che invia
 			write(sd, &buff, nread); //invio
 		}
 		printf("Client: file inviato\n");
@@ -123,14 +122,7 @@ int main(int argc, char *argv[])
 		shutdown(sd, 1);
 		close(fd_sorg); // chiusura file in lettura
 
-		/* apro file in scrittura */
-		/*if ((fd_sorg = open(nome_sorg, O_WRONLY)) < 0)
-		{
-			perror("open file sorgente in scrittura");
-			printf("Qualsiasi tasto per procedere, EOF per fine: \n");
-			continue;
-		}*/
-		//prova
+		
 		/*RICEZIONE File*/
 		printf("Client: ricevo e stampo file\n");
 		while ((nread = read(sd, buff, DIM_BUFF)) > 0)
@@ -138,11 +130,11 @@ int main(int argc, char *argv[])
 			write(fd_dest, buff, nread);
 			write(1, buff, nread);
 		}
-		printf("Trasfefimento terminato\n");
+		printf("Trasferimento terminato\n");
 		/* Chiusura socket in ricezione */
 		shutdown(sd, 0);
 		/* Chiusura file */
-		close(fd_sorg);
+		
 		close(fd_dest);
 		close(sd); //chiudo socket
 

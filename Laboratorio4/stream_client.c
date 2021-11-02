@@ -82,6 +82,8 @@ attende il pacchetto con l’esito dell’operazione, cioè il
 numero di eliminazioni della parola che stampa a video
 Il file è modificato nel servitore
 */
+printf("Inserisci il nome del file e la parola da eliminare, entrambi separati da uno spazio\n");
+
 	while (gets(nome_file))
 	{
 

@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 			char ch;
 			int numLinea;
 			read(conn_sd, &numLinea, sizeof(int));
-			numLinea = ntohs(numLinea);
+			//numLinea = ntohs(numLinea);
 			printf("Ricevuto linea: %d\n", numLinea);
 
 			printf("Server (figlio): eseguo l'eliminazione \n");
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 			int i = 1;
 			while (read(conn_sd, &ch, 1) > 0)
 			{
-				printf("%c", ch);
+				//printf("%c", ch);
 				if (ch == '\n' || ch == '\0')
 				{
 					i++;
