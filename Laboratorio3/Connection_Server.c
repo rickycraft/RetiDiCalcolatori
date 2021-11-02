@@ -154,7 +154,8 @@ int main(int argc, char **argv)
 					write(conn_sd, &ch, 1);
 				}
 			}
-
+			printf("Server (figlio): termino...\n");
+			exit(1);
 		}				// figlio
 		close(conn_sd); // padre chiude socket di connessione non di scolto
 	}					// ciclo for infinito
