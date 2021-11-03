@@ -77,10 +77,20 @@ int main(int argc, char *argv[]){
 		}
 		printf("Richiesta del direttorio %s inviata... \n", nome_direttorio);
 		int nread;
+		char c;
+		char sep='\n';
 		printf("Ricevo la lista di nomi:\n");
-		while((nread=read(sd,nome_file,sizeof(nome_file)))>0)
+		while((nread=read(sd,&c,sizeof(c)))>0)
 		{
-			write(1,nome_file,nread);
+			if(c!=';')
+			{
+				write(1,&c,1);
+			}
+			else
+			{
+				write(1,&sep,1);
+			}
+			
 		}
 		if(nread<0)
 		{
