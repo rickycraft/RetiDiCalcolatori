@@ -17,45 +17,26 @@
 #define LENGTH_DIRECTORY_NAME 200
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-<<<<<<< HEAD
-/********************************************************/
 int conta_file(char *name)
 {
-	DIR *dir;
-	struct dirent *dd;
-	int count = 0;
-	dir = opendir(name);
-	if (dir == NULL)
-		return -1;
-	while ((dd = readdir(dir)) != NULL)
-	{
-		printf("Trovato il file %s\n", dd->d_name);
-		count++;
-	}
-	printf("Numero totale di file %d\n", count);
-	closedir(dir);
-	return count;
+  DIR *dir;
+  struct dirent *dd;
+  int count = 0;
+  dir = opendir(name);
+  if (dir == NULL)
+    return -1;
+  while ((dd = readdir(dir)) != NULL)
+  {
+    printf("Trovato il file %s\n", dd->d_name);
+    count++;
+  }
+  printf("Numero totale di file %d\n", count);
+  closedir(dir);
+  return count;
 }
-/********************************************************/
-void splitStringDelim(char* str, char*file , char* parola, char delim){ //dopo fare la free di parola e file
-	int len=strlen(str);
-    printf("len %i \n",len);
-    int pos=0;
-    while(str[pos]!=delim){
-        pos++;
-    }
-    printf("sep pos %i \n",pos);
-    *file=(char*)malloc(sizeof(char)* (pos));
-    strncpy(file,str,pos);
-   *parola=(char*)malloc(sizeof(char)* (len-pos));
-    strncpy(parola,str+ pos+1,len-pos);
-    
-    printf("file:%s parola:%s\n",file,parola);
-}
-=======
+
 int elimina_parole_dafile(char *nome_file, char *parola) { return 1; }
 
->>>>>>> 794713dc95392e9c25d9a716e766fa5bbd9091df
 void gestore(int signo)
 {
   int stato;
@@ -67,11 +48,11 @@ int main(int argc, char **argv)
 {
   int listenfd, connfd, udpfd, fd_file, nready, maxfdp1;
   const int on = 1;
-  char zero = 0, buff[DIM_BUFF], packet_in[2 * LENGTH_FILE_NAME];
+  char buff[DIM_BUFF], packet_in[2 * LENGTH_FILE_NAME];
   char *nome_file, *parola;
-  const char *separator = "|";
-  DIR *dir;
-  struct dirent *dd;
+  const char *separator = "|", *current_dir = ".";
+  DIR *dir, *subdir;
+  struct dirent *dd, *dd2;
   fd_set rset;
   int len, nread, nwrite, num, ris, port;
   struct sockaddr_in cliaddr, servaddr;
@@ -207,7 +188,6 @@ int main(int argc, char **argv)
           exit(9);
         }
       }
-
       if (fork() == 0)
       {
         close(listenfd);
@@ -221,39 +201,34 @@ int main(int argc, char **argv)
             break;
           }
           printf("Richiesta directory %s\n", packet_in);
-          dir = opendir(packet_in);
-          if (dir == NULL)
+          // non funziona nella seconda
+          if (chdir(packet_in) < 0)
           {
-            // errore nella directory
-            continue;
+            // gestione dell'errore da migliorare
+            break;
           }
-          char nome_dir[LENGTH_DIRECTORY_NAME];
-          DIR *subdir;
-          char separatore=';';
-          struct dirent *dd2; //cambiare i nomi altrimenti giuSY rompe il cazzo :)
+
+          dir = opendir(current_dir);
           while ((dd = readdir(dir)) != NULL)
           {
-            
-            if (dd->d_type == DT_DIR) //quindi è una directory
+            // se dd è una directory
+            if (dd->d_type == DT_DIR)
             {
-              printf("dd name %s\n",(dd->d_name));
-              subdir=opendir(dd->d_name);
-              while((dd2 = readdir(subdir)) != NULL)
+              printf("Subdirectory: %s\n", (dd->d_name));
+              subdir = opendir(dd->d_name);
+              while ((dd2 = readdir(subdir)) != NULL)
               {
-                if(dd2->d_type==DT_REG)
+                if (dd2->d_type == DT_REG)
                 {
-                   printf("Trovato il file %s\n", dd2->d_name);
+                  printf("Trovato il file %s\n", dd2->d_name);
                   write(connfd, dd2->d_name, sizeof(dd2->d_name));
-                  write(connfd,&separatore,sizeof(char));
                 }
               }
               closedir(subdir);
-
             }
-           
           }
+          write(connfd, separator, sizeof(char));
           closedir(dir);
-
           printf("Terminato invio nomi file\n");
         }
         printf("Figlio %i: chiudo connessione e termino\n", getpid());
@@ -287,7 +262,6 @@ int main(int argc, char **argv)
       printf("Ricevuto datagram %s|%s\n", nome_file, parola);
       num = elimina_parole_dafile(nome_file, parola);
       printf("Risultato del conteggio: %i\n", num);
-      // ris = htonl(num);
       if (sendto(udpfd, &num, sizeof(num), 0, (struct sockaddr *)&cliaddr,
                  len) < 0)
       {
