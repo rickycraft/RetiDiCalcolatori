@@ -35,6 +35,21 @@ int conta_file(char *name)
 	return count;
 }
 /********************************************************/
+void splitStringDelim(char* str, char*file , char* parola, char delim){ //dopo fare la free di parola e file
+	int len=strlen(str);
+    printf("len %i \n",len);
+    int pos=0;
+    while(str[pos]!=delim){
+        pos++;
+    }
+    printf("sep pos %i \n",pos);
+    *file=(char*)malloc(sizeof(char)* (pos));
+    strncpy(file,str,pos);
+   *parola=(char*)malloc(sizeof(char)* (len-pos));
+    strncpy(parola,str+ pos+1,len-pos);
+    
+    printf("file:%s parola:%s\n",file,parola);
+}
 void gestore(int signo)
 {
 	int stato;
