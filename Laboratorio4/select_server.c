@@ -14,6 +14,7 @@
 
 #define DIM_BUFF 100
 #define LENGTH_FILE_NAME 20
+#define LENGHT_WORD 32
 #define LENGTH_DIRECTORY_NAME 200
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
@@ -36,49 +37,58 @@ int conta_file(char *name)
 }
 
 int elimina_parole_dafile(char *nome_file, char *parola) { 
-  int fd_in,fd_out;
-  char c;
-  char *temp[1000];
-  int i=0;
-  int count=0;
+    int fd_in,fd_out;
+    char nomeTemp[LENGTH_FILE_NAME+5];
+    char c;
+    char temp[LENGHT_WORD];
+    int i=0;
+    int count=0;
     if((fd_in=open(nome_file,O_RDONLY))<0){
-      printf("errore dell aperture file in lettura");
-      return -1;
+    printf("errore dell aperture file in lettura");
+    return -1;
     }
-    if((fd_in=open(strcat(nome_file,"_temp"),O_CREAT|O_WRONLY,0777))<0){
-      printf("errore dell aperture/creazione file temporanea");
-      return -1;
+    strcpy(nomeTemp,nome_file);
+    strcat(nomeTemp,"_temp");
+    printf("aperto file in lettura\n");
+    if((fd_out=open(nomeTemp,O_CREAT|O_WRONLY,0777))<0){
+    printf("errore dell aperture/creazione file temporanea %s", nomeTemp);
+    return -1;
     }
+    printf("aperto file in scrittura \n");
     /*
     leggo carattere per carattere e salvo in una stringa temporanea 
     quando leggo uno spazio confronto temp con la parola 
     se è la parola count++ altrimenti scrivo temp e spazio
     */
-    while(read(fd_in,&c,1)){
-        if(c!=' ' && c!='\n'){
-          temp[i]=c;
-          i++;
+    while(read(fd_in,&c,1)>0){
+        if(c!=' ' && c!='\n' && c!='\t'){
+            temp[i]=c;
+            i++;
         }else {
-          temp[i]='\0';
-          if(strcmp(parola,temp)>0){
-            count++;
+            if(strcmp(parola,temp)==0){
+                count++;
+                printf("eliminata %s\n",parola);
+            }else {
+                write(fd_out,temp,i);
+                printf("%s\n",temp);
+            }
+            write(fd_out,&c,1);    
+            memset(temp, 0 , i);
             i=0;
-          }else {
-            write(fd_out,temp,i);
-            write(fd_out,c,1);
-            i=0;
-          }
         }
-    }
-    temp[i]='\0';//ultima parola prima del EOF
-    if(strcmp(parola,temp)>0)
-      count++;
+    }//ultima parola prima del EOF
+    if(strcmp(parola,temp)==0)
+        count++;
     else 
-      write(fd_out,temp,i);
+        write(fd_out,temp,i);
+
+    printf("count %d \n",count );
     close(fd_in);
     close(fd_out);
+
     remove(nome_file);
-    rename(strcat(nome_file,"_temp"),nome_file);
+    rename(nomeTemp,nome_file);
+
     return count;
 
  }
