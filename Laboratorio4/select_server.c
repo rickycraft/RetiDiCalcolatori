@@ -35,7 +35,48 @@ int conta_file(char *name)
   return count;
 }
 
-int elimina_parole_dafile(char *nome_file, char *parola) { return 1; }
+int elimina_parole_dafile(char *nome_file, char *parola) { 
+  int fd_in,fd_out;
+  char c;
+  char *temp[1000];
+  int i=0;
+  int count=0;
+    if((fd_in=open(nome_file,O_RDONLY))<0){
+      printf("errore dell aperture file in lettura");
+      return -1;
+    }
+    if((fd_in=open(strcat(nome_file,"_temp"),O_CREAT|O_WRONLY,0777))<0){
+      printf("errore dell aperture/creazione file temporanea");
+      return -1;
+    }
+    /*
+    leggo carattere per carattere e salvo in una stringa temporanea 
+    quando leggo uno spazio confronto temp con la parola 
+    se è la parola count++ altrimenti scrivo temp e spazio
+    */
+    while(read(fd_in,&c,1)){
+        if(c!=' ' && c!='\n'){
+          temp[i]=c;
+          i++;
+        }else {
+          temp[i]='\0';
+          if(strcmp(parola,temp)>0){
+            count++;
+            i=0;
+          }else {
+            write(fd_out,temp,i);
+            write(fd_out,c,1);
+            i=0;
+          }
+        }
+    }
+    close(fd_in);
+    close(fd_out);
+    remove(nome_file);
+    rename(strcat(nome_file,"_temp"),nome_file);
+    return count;
+
+ }
 
 void gestore(int signo)
 {
