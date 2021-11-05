@@ -102,11 +102,10 @@ int main(int argc, char **argv) {
       continue;
     }
 
-    if (result < 1) {
-      printf("Errore del server");
-    } else {
+    if (result < 1)
+      printf("Errore del server\n");
+    else
       printf("Numero di parole eliminate %d\n", result);
-    }
 
   } while (1);
 
