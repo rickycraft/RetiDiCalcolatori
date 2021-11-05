@@ -70,6 +70,11 @@ int elimina_parole_dafile(char *nome_file, char *parola) {
           }
         }
     }
+    temp[i]='\0';//ultima parola prima del EOF
+    if(strcmp(parola,temp)>0)
+      count++;
+    else 
+      write(fd_out,temp,i);
     close(fd_in);
     close(fd_out);
     remove(nome_file);
