@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
   char packet_in[PATH_MAX], cwd[PATH_MAX];
   char *nome_file, *parola;
   const char *separator = "|", *current_dir = ".", *prev_dir = "..",
-             *errore = "Errore del server";
+             *errore = "Errore del server\n";
   const char newline = '\n';
   DIR *dir, *subdir;
   struct dirent *dd, *dd2;
@@ -223,7 +223,7 @@ int main(int argc, char **argv) {
           if (chdir(packet_in) < 0) {
             write(connfd, errore, strlen(errore));
             write(connfd, separator, sizeof(char));
-            break;
+            
           }
 
           dir = opendir(current_dir);
@@ -247,10 +247,19 @@ int main(int argc, char **argv) {
           closedir(dir);
           chdir(cwd);
           printf("Terminato invio nomi file\n");
+          printf("Per chiudere la connessione mandare EOF al client\n");
+          char c;
+          read(connfd,&c,1);
+          if(c=='\0')
+          {
+            break;
+          }
+          
         }
         printf("Figlio %i: chiudo connessione e termino\n", getpid());
         close(connfd);
         exit(0);
+
       }
       close(connfd);
     }

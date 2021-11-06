@@ -16,14 +16,16 @@ nei direttori di secondo livello */
 #define LENGTH_DIRECTORY_NAME 200
 #define LENGTH_FILE_NAME 20
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   int sd, nread, port;
   char c, nome_direttorio[PATH_MAX];
   struct hostent *host;
   struct sockaddr_in servaddr;
 #pragma region setup
   /* CONTROLLO NUMERO ARGOMENTI */
-  if (argc != 3) {
+  if (argc != 3)
+  {
     printf("Error:%s serverAddress serverPort\n", argv[0]);
     exit(1);
   }
@@ -34,15 +36,18 @@ int main(int argc, char *argv[]) {
   servaddr.sin_family = AF_INET;
   host = gethostbyname(argv[1]);
   /*GESTIONE ERRORE */
-  if (host == NULL) {
+  if (host == NULL)
+  {
     printf("%s not found in /etc/hosts\n", argv[1]);
     exit(2);
   }
 
   /*CONTROLLO SECONDO ARGOMENTO: PORTA */
   nread = 0;
-  while (argv[2][nread] != '\0') {
-    if ((argv[2][nread] < '0') || (argv[2][nread] > '9')) {
+  while (argv[2][nread] != '\0')
+  {
+    if ((argv[2][nread] < '0') || (argv[2][nread] > '9'))
+    {
       printf("Secondo argomento non intero\n");
       exit(2);
     }
@@ -50,7 +55,8 @@ int main(int argc, char *argv[]) {
   }
   port = atoi(argv[2]);
   /*GESTIONE ERRORE*/
-  if (port < 1024 || port > 65535) {
+  if (port < 1024 || port > 65535)
+  {
     printf("Porta scorretta...");
     exit(2);
   }
@@ -60,14 +66,16 @@ int main(int argc, char *argv[]) {
 
   /* CREAZIONE E CONNESSIONE SOCKET (BIND IMPLICITA)*/
   sd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sd < 0) {
+  if (sd < 0)
+  {
     perror("apertura socket ");
     exit(3);
   }
   printf("Creata la socket sd=%d\n", sd);
 
   /* GESTIONE ERRORE */
-  if (connect(sd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) < 0) {
+  if (connect(sd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) < 0)
+  {
     perror("Errore in connect");
     exit(4);
   }
@@ -76,22 +84,46 @@ int main(int argc, char *argv[]) {
 #pragma endregion
   printf("Nome del direttorio: ");
 
-  while (gets(nome_direttorio)) {
+  while (gets(nome_direttorio))
+  {
     /*GESTIONE ERRORE INVIO*/
-    if (write(sd, nome_direttorio, (strlen(nome_direttorio) + 1)) < 0) {
+    if (write(sd, nome_direttorio, (strlen(nome_direttorio) + 1)) < 0)
+    {
       perror("write");
       break;
     }
+    int fileInviato=0;
     printf("Richiesta del direttorio %s inviata... \n", nome_direttorio);
     printf("Ricevo la lista di nomi:\n");
-    while ((nread = read(sd, &c, sizeof(char))) > 0) {
+    while ((nread = read(sd, &c, sizeof(char))) > 0)
+    {
       if (c != '|')
+      {
         putchar(c);
+        fileInviato=1;
+      } 
       else
         break;
     }
-    printf("Nome del direttorio: ");
-  }  // while
+    if(!fileInviato)
+    {
+      printf("Non è stato inviato nulla dal server, probabilmente non ha trovato file\n");
+    }
+    printf("Vuoi terminare la connessione? (y/n)\n");
+    if ((c = getchar()) == 'y')
+    {
+      c = '\0';
+      write(sd, &c, 1);
+      break;
+    }
+    else
+    {
+      write(sd, &c, 1);
+      printf("Nome del direttorio : ");
+      gets();
+    }
+
+  } // while
   printf("\nClient: termino...\n");
   shutdown(sd, 0);
   shutdown(sd, 1);
