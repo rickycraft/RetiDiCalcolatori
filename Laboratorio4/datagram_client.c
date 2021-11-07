@@ -66,7 +66,6 @@ int main(int argc, char **argv) {
     exit(3);
   }
   printf("Creata la socket sd=%d\n", sd);
-
   /* BIND SOCKET, a una porta scelta dal sistema --------------- */
   if (bind(sd, (struct sockaddr *)&clientaddr, sizeof(clientaddr)) < 0) {
     perror("bind socket ");

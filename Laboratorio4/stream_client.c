@@ -66,16 +66,13 @@ int main(int argc, char *argv[])
 
   /* CREAZIONE E CONNESSIONE SOCKET (BIND IMPLICITA)*/
   sd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sd < 0)
-  {
+  if (sd < 0){
     perror("apertura socket ");
     exit(3);
   }
   printf("Creata la socket sd=%d\n", sd);
-
   /* GESTIONE ERRORE */
-  if (connect(sd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) < 0)
-  {
+  if (connect(sd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) < 0){
     perror("Errore in connect");
     exit(4);
   }
