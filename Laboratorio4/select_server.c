@@ -245,19 +245,20 @@ int main(int argc, char **argv)
 
         for (;;)
         {
-          if ((read(connfd, &packet_in, sizeof(packet_in))) <= 0)
+          if ((read(connfd, &packet_in, sizeof(packet_in))) < 0)
           {
             perror("read");
             break;
           }
           printf("Richiesta directory <%s>\n", packet_in);
           // non funziona nella seconda
+          //long ini=millis();
           if (chdir(packet_in) < 0)
           {
             write(connfd, errore, strlen(errore));
             write(connfd, separator, sizeof(char));
           }
-
+          
           dir = opendir(current_dir);
           while ((dd = readdir(dir)) != NULL)
           {
@@ -282,6 +283,8 @@ int main(int argc, char **argv)
           write(connfd, separator, sizeof(char));
           closedir(dir);
           chdir(cwd);
+          //long fine=millis();
+          //printf("TIME: %ld",fine-ini);
           printf("Terminato invio nomi file\n");
           printf("Per chiudere la connessione mandare EOF al client\n");
           char c;
@@ -347,6 +350,7 @@ int main(int argc, char **argv)
     quando leggo uno spazio confronto temp con la parola
     se è la parola count++ altrimenti scrivo temp e spazio
     */
+   //long ini=millis();
       while (read(fd_in, &c, 1) > 0)
       {
         if (c != ' ' && c != '\n' && c != '\t' && c != '\r') 
@@ -356,6 +360,7 @@ int main(int argc, char **argv)
         }
         else
         {
+          temp[i+1]='\0';
           if (strcmp(parola, temp) == 0)
           {
             count++;
@@ -382,7 +387,8 @@ int main(int argc, char **argv)
 
       remove(nome_file);
       rename(nomeTemp, nome_file);
-
+      //long fine=millis();
+      //printf("TIME:%ld\n",fine-ini);
       printf("Risultato del conteggio: %i\n", count);
       if (sendto(udpfd, &count, sizeof(count), 0, (struct sockaddr *)&cliaddr,
                  len) < 0)
