@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -26,8 +27,28 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void main() {
-
+	public static void main(String[] args) {
+		final int REGISTRYPORT =4500 ;
+		String registryHost="localhost";
+		/*try {
+			registryHost = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+		String serviceName = "RemOp";
+		String completeName = "//" + registryHost + ":" + REGISTRYPORT + "/" + serviceName;
+		try {
+			ServerImpl serverRMI = new ServerImpl();
+			Naming.rebind(completeName, serverRMI);
+			System.out.println("Server RMI: Servizio \"" + serviceName + "\" registrato");
+		} catch (Exception e) {
+			System.err.println("Server RMI \"" + serviceName + "\": " + e.getMessage());
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		
 	}
 
 	@Override
@@ -90,12 +111,16 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		if(riga<num){
 			//mo so cazzi
 			throw new RemoteException();
 		}else {
 			return new FileRighe(nomeFile,righeNuove);
 		}
+		
+		
+		
 
 
 	}
