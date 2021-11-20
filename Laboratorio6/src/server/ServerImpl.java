@@ -80,47 +80,8 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 	}
 
 	@Override
-	public FileRighe elimina_riga(String nomeFile, int num) throws RemoteException {
-		// Qui verranno fatti i metodi implementati dall'interfaccia
-		System.out.println("nomeFile: "+ nomeFile+" num: "+ num);
-		//Considerando che la prima riga sia la numero 1 e non la 0
-		//(ha scassato la minchia pure su questo quindi bisogna dirlo all'utente quando lo usa)
-		int riga=1;
-		int righeNuove=0;
-
-		try {
-			BufferedReader buff = new BufferedReader(new FileReader(nomeFile));
-			String str;
-			File temp=new File(nomeFile+"_temp");
-			BufferedWriter buff_temp=new BufferedWriter(new FileWriter(temp));
-			while((str=buff.readLine())!=null)
-			{
-
-				if(riga!=num)
-				{
-					buff_temp.write(str+'\n');
-					righeNuove++;
-				}
-				riga++;
-			}
-
-			buff.close();
-			temp.renameTo(new File(nomeFile));
-			buff_temp.close();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(riga<num){
-			//mo so cazzi
-			throw new RemoteException();
-		}else {
-			return new FileRighe(nomeFile,righeNuove);
-		}
-	}
-	public FileRighe elimina_riga2(String nomeFile,int numRigaElim) {
+	
+	public FileRighe elimina_riga(String nomeFile,int numRigaElim) {
 		int indiceRiga=0;
 		int righeFile=0;
 		
