@@ -108,7 +108,7 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 
 			rd.close();
 			wr.close();
-			if(indiceRiga<=numRigaElim) {
+			if(indiceRiga<numRigaElim) {
 				fileTemp.delete();
 				
 				throw new RemoteException("non esiste riga numero "+numRigaElim+" nel file "+nomeFile);
