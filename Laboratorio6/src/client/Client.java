@@ -57,10 +57,11 @@ public class Client {
 						}
 					}
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-					
+
 					try {
 						int numRighe = serverRMI.conta_righe(nomeFile, val);
-						System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
+						System.out
+								.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
 					} catch (RemoteException re) {
 						System.out.println(re.getMessage());
 					}
@@ -74,7 +75,7 @@ public class Client {
 
 					System.out.println("Inserisci il numero della riga da eliminare (parte da 0):\n");
 					int val = 0;
-					Boolean checkIfNum = true;
+					Boolean checkIfNum = false;
 					while (!checkIfNum) {
 						try {
 							val = Integer.parseInt(stdIn.readLine());
