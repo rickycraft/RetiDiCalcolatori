@@ -57,7 +57,7 @@ public class Client {
 					}
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
 					int numRighe = serverRMI.conta_righe(nomeFile, val);
-					System.out.println("Il numero di righe che hanno piu di " + val + " righe è: " + numRighe + "\n");
+					System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
 
 				}
 
