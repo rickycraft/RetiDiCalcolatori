@@ -46,19 +46,19 @@ public class Client {
 
 					System.out.println("Inserisci il numero:\n");
 					int val = 0;
-					Boolean bool = true;
-					try {
-						val = Integer.parseInt(stdIn.readLine());
-					} catch (NumberFormatException e) {
-						System.out.println("scrivi bene il numero\n");
-						bool = false;
+					Boolean checkIfNum = true;
+					while (!checkIfNum) {
+						try {
+							val = Integer.parseInt(stdIn.readLine());
+							checkIfNum = true;
+						} catch (NumberFormatException e) {
+							System.out.println("scrivi bene il numero per favore\n");
+							checkIfNum = false;
+						}
 					}
-					if (bool) {
-						System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-						int numRighe = serverRMI.conta_righe(nomeFile, val);
-						System.out
-								.println("Il numero di righe che hanno più di " + val + " righe è: " + numRighe + "\n");
-					}
+					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
+					int numRighe = serverRMI.conta_righe(nomeFile, val);
+					System.out.println("Il numero di righe che hanno più di " + val + " righe è: " + numRighe + "\n");
 
 				}
 
@@ -70,13 +70,14 @@ public class Client {
 
 					System.out.println("Inserisci il numero della riga da eliminare (parte da 1):\n");
 					int val = 0;
-					Boolean valCorretto = false;
-					while (!valCorretto) {
+					Boolean checkIfNum = true;
+					while (!checkIfNum) {
 						try {
 							val = Integer.parseInt(stdIn.readLine());
-							valCorretto = true;
+							checkIfNum = true;
 						} catch (NumberFormatException e) {
-							System.out.println("scrivi bene il numero\n");
+							System.out.println("scrivi bene il numero per favore\n");
+							checkIfNum = false;
 						}
 					}
 
