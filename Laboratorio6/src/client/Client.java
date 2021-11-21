@@ -57,7 +57,7 @@ public class Client {
 					}
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
 					int numRighe = serverRMI.conta_righe(nomeFile, val);
-					System.out.println("Il numero di righe che hanno più di " + val + " righe è: " + numRighe + "\n");
+					System.out.println("Il numero di righe che hanno piu di " + val + " righe è: " + numRighe + "\n");
 
 				}
 
@@ -83,7 +83,7 @@ public class Client {
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
 					String result = serverRMI.elimina_riga(nomeFile, val);
 					String[] sep = result.split(";");
-					System.out.println("Il file modificato è" + sep[0] + " con " + sep[1] + "righe\n");
+					System.out.println("Il file modificato e" + sep[0] + " con " + sep[1] + "righe\n");
 
 				}
 				System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe \n");
