@@ -3,6 +3,7 @@ package client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 
 import server.RemOp;
 
@@ -56,9 +57,13 @@ public class Client {
 						}
 					}
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-					int numRighe = serverRMI.conta_righe(nomeFile, val);
-					System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
-
+					
+					try {
+						int numRighe = serverRMI.conta_righe(nomeFile, val);
+						System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
+					} catch (RemoteException re) {
+						System.out.println(re.getMessage());
+					}
 				}
 
 				if (azione.equalsIgnoreCase("E")) {
@@ -81,9 +86,14 @@ public class Client {
 					}
 
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-					String result = serverRMI.elimina_riga(nomeFile, val);
-					String[] sep = result.split(";");
-					System.out.println("Il file modificato e" + sep[0] + " con " + sep[1] + "righe\n");
+					try {
+						String result = serverRMI.elimina_riga(nomeFile, val);
+						String[] sep = result.split(";");
+						System.out.println("Il file modificato e" + sep[0] + " con " + sep[1] + "righe\n");
+
+					} catch (RemoteException re) {
+						System.out.println(re.getMessage());
+					}
 
 				}
 				System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe \n");
