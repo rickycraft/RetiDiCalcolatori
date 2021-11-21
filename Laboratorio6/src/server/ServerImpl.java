@@ -84,7 +84,7 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 
 	@Override
 
-	public FileRighe elimina_riga(String nomeFile, int numRigaElim) {
+	public String elimina_riga(String nomeFile, int numRigaElim) {
 		int indiceRiga = 0;
 		int righeFile = 0;
 
@@ -120,7 +120,7 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 
 				fileTemp.renameTo(fileOg);
 				System.out.println("file sostituito");
-				return new FileRighe(nomeFile, righeFile);
+				return nomeFile + ";" + righeFile;
 			}
 
 		} catch (FileNotFoundException e) {

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.Naming;
 
-import server.FileRighe;
 import server.RemOp;
 
 public class Client {
@@ -82,9 +81,9 @@ public class Client {
 					}
 
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-					FileRighe result = serverRMI.elimina_riga(nomeFile, val);
-					System.out.println(
-							"Il file modificato è" + result.getNomeFile() + " con " + result.getnRighe() + "righe\n");
+					String result = serverRMI.elimina_riga(nomeFile, val);
+					String[] sep = result.split(";");
+					System.out.println("Il file modificato è" + sep[0] + " con " + sep[1] + "righe\n");
 
 				}
 				System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe \n");
