@@ -9,6 +9,8 @@ import server.RemOp;
 
 public class Client {
 
+	private static final String cosavuoifare = "Cosa vuoi fare? E per Elimina_riga, C per conta_righe, qualsiasi altro carattere per uscire";
+
 	public static void main(String[] args) {
 
 		/*
@@ -33,18 +35,18 @@ public class Client {
 		try {
 			String completeName = "//" + registryHost + ":" + registryPort + "/" + serviceName;
 			RemOp serverRMI = (RemOp) Naming.lookup(completeName);
-			System.out.println("ClientRMI: Servizio \"" + serviceName + "\" connesso\n");
+			System.out.println("ClientRMI: Servizio \"" + serviceName + "\" connesso");
 
-			System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe ");
+			System.out.println(cosavuoifare);
 			String azione;
 			while ((azione = stdIn.readLine()) != null) {
 
 				if (azione.equalsIgnoreCase("C")) {
 					// Chiede conta_righe
-					System.out.println("Inserisci il nome del file:\n");
+					System.out.println("Inserisci il nome del file:");
 					String nomeFile = stdIn.readLine();
 
-					System.out.println("Inserisci il numero:\n");
+					System.out.println("Inserisci il numero:");
 					int val = 0;
 					Boolean checkIfNum = false;
 					while (!checkIfNum) {
@@ -52,56 +54,52 @@ public class Client {
 							val = Integer.parseInt(stdIn.readLine());
 							checkIfNum = true;
 						} catch (NumberFormatException e) {
-							System.out.println("scrivi bene il numero per favore\n");
+							System.out.println("scrivi bene il numero per favore");
 							checkIfNum = false;
 						}
 					}
-					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
+					System.out.println("nomeFile: " + nomeFile + "\t num: " + val);
 
 					try {
 						int numRighe = serverRMI.conta_righe(nomeFile, val);
-						System.out
-								.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe + "\n");
+						System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe);
 					} catch (RemoteException re) {
 						System.out.println(re.getMessage());
 					}
-				}
-
-				if (azione.equalsIgnoreCase("E")) {
+				} else if (azione.equalsIgnoreCase("E")) {
 					// chiede elimina_riga
-
-					System.out.println("Inserisci il nome del file:\n");
+					System.out.println("Inserisci il nome del file:");
 					String nomeFile = stdIn.readLine();
-
-					System.out.println("Inserisci il numero della riga da eliminare (parte da 0):\n");
+					System.out.println("Inserisci il numero della riga da eliminare (parte da 0):");
 					int val = 0;
-					Boolean checkIfNum = false;
+					boolean checkIfNum = false;
 					while (!checkIfNum) {
 						try {
 							val = Integer.parseInt(stdIn.readLine());
 							checkIfNum = true;
 						} catch (NumberFormatException e) {
-							System.out.println("scrivi bene il numero per favore\n");
+							System.out.println("scrivi bene il numero per favore");
 							checkIfNum = false;
 						}
 					}
 
-					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
+					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "");
 					try {
 						String result = serverRMI.elimina_riga(nomeFile, val);
 						String[] sep = result.split(";");
-						System.out.println("Il file modificato e" + sep[0] + " con " + sep[1] + "righe\n");
+						System.out.println("Il file modificato e " + sep[0] + " con " + sep[1] + " righe");
 
 					} catch (RemoteException re) {
 						System.out.println(re.getMessage());
 					}
-
+				} else {
+					System.out.println("Esco come richiesto");
+					System.exit(0);
 				}
-				System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe \n");
+				System.out.println(cosavuoifare);
 			}
-
 		} catch (Exception e) {
-
+			System.out.println("Eccezione generica " + e.getMessage());
 		}
 	}
 }

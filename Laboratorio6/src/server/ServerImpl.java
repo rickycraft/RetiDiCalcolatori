@@ -3,28 +3,18 @@ package server;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ServerImpl extends UnicastRemoteObject implements RemOp {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 
-	 */
 
 	protected ServerImpl() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) {
@@ -64,27 +54,20 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 		try {
 			BufferedReader buff = new BufferedReader(new FileReader(nomeFile));
 			String str;
-
 			while ((str = buff.readLine()) != null) {
 				if (str.split(" ").length > numMin) {
 					nRighe++;
 				}
 			}
-
 			buff.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new RemoteException();
-
+			throw new RemoteException(e.getMessage());
 		}
-
 		return nRighe;
 	}
 
 	@Override
-
-	public String elimina_riga(String nomeFile, int numRigaElim) {
+	public String elimina_riga(String nomeFile, int numRigaElim) throws RemoteException {
 		int indiceRiga = 0;
 		int righeFile = 0;
 
@@ -101,7 +84,6 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 				if (indiceRiga != numRigaElim) {
 					wr.write(lineaLetta + "\n");
 					System.out.println("riga " + indiceRiga);
-
 					righeFile++;
 				}
 				indiceRiga++;
@@ -112,7 +94,6 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 			wr.close();
 			if (indiceRiga < numRigaElim) {
 				fileTemp.delete();
-
 				throw new RemoteException("non esiste riga numero " + numRigaElim + " nel file " + nomeFile);
 			} else {
 				File fileOg = new File(nomeFile);
@@ -122,13 +103,9 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 				System.out.println("file sostituito");
 				return nomeFile + ";" + righeFile;
 			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage());
 		}
-		return null;
 	}
 
 }
