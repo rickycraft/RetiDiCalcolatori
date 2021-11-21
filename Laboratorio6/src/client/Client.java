@@ -45,7 +45,7 @@ public class Client {
 
 					System.out.println("Inserisci il numero:\n");
 					int val = 0;
-					Boolean checkIfNum = true;
+					Boolean checkIfNum = false;
 					while (!checkIfNum) {
 						try {
 							val = Integer.parseInt(stdIn.readLine());
@@ -67,7 +67,7 @@ public class Client {
 					System.out.println("Inserisci il nome del file:\n");
 					String nomeFile = stdIn.readLine();
 
-					System.out.println("Inserisci il numero della riga da eliminare (parte da 1):\n");
+					System.out.println("Inserisci il numero della riga da eliminare (parte da 0):\n");
 					int val = 0;
 					Boolean checkIfNum = true;
 					while (!checkIfNum) {
