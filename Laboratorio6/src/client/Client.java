@@ -15,23 +15,23 @@ public class Client {
 		 * In pratica il client deve semplicemente poter invocare i metodi di RemOp
 		 */
 
-		final int REGISTRYPORT = 1099;
+		int registryPort = 1099;
 		String registryHost = null; // host remoto con registry
-		String serviceName = "";
+		String serviceName = "RemOp";
 		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 
 		// Controllo dei parametri della riga di comando
 		if (args.length != 2) {
-			System.out.println("Sintassi: RMI_Registry_IP ServiceName");
+			System.out.println("Sintassi: RMI_Registry_IP RegistryPort");
 			System.exit(1);
 		}
 		registryHost = args[0];
-		serviceName = args[1];
+		registryPort = Integer.parseInt(args[1]);
 
 		System.out.println("Invio richieste a " + registryHost + " per il servizio di nome " + serviceName);
 
 		try {
-			String completeName = "//" + registryHost + ":" + REGISTRYPORT + "/" + serviceName;
+			String completeName = "//" + registryHost + ":" + registryPort + "/" + serviceName;
 			RemOp serverRMI = (RemOp) Naming.lookup(completeName);
 			System.out.println("ClientRMI: Servizio \"" + serviceName + "\" connesso\n");
 
@@ -56,10 +56,9 @@ public class Client {
 					if (bool) {
 						System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
 						int numRighe = serverRMI.conta_righe(nomeFile, val);
-						System.out.println(
-								"Il numero di righe che hanno più di " + val + " righe è: " + numRighe + "\n");
+						System.out
+								.println("Il numero di righe che hanno più di " + val + " righe è: " + numRighe + "\n");
 					}
-
 
 				}
 
@@ -82,10 +81,9 @@ public class Client {
 					}
 
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val + "\n");
-					FileRighe result= serverRMI.elimina_riga(nomeFile, val);
-					System.out.println("Il file modificato è" + result.getNomeFile() + " con " + result.getnRighe() + "righe\n");
-
-
+					FileRighe result = serverRMI.elimina_riga(nomeFile, val);
+					System.out.println(
+							"Il file modificato è" + result.getNomeFile() + " con " + result.getnRighe() + "righe\n");
 
 				}
 				System.out.println("Cosa vuoi fare? E per Elimina_riga, C per conta_righe \n");
