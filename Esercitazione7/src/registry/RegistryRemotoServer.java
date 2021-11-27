@@ -1,4 +1,4 @@
-package server;
+package registry;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

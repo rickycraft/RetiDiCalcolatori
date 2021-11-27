@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
-import server.RegistryRemotoTagClient;
-import server.RemOp;
+import registry.RegistryRemotoTagClient;
+import registry.RemOp;
 
 public class ClientServerRighe {
 

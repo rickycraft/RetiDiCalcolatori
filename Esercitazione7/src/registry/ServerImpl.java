@@ -1,4 +1,4 @@
-package server;
+package registry;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

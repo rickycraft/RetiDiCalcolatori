@@ -1,4 +1,4 @@
-package server;
+package registry;
 
 import java.rmi.Naming;
 import java.rmi.Remote;
