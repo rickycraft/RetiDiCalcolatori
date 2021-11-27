@@ -61,7 +61,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public boolean eliminaPrimo(String nome_logico) throws RemoteException {
+	public synchronized boolean eliminaPrimo(String nome_logico) throws RemoteException {
 		boolean result = false;
 		if (nome_logico.isEmpty())
 			throw new RemoteException("nome non corretto");
@@ -88,7 +88,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public Remote cerca(String nomeLogico) throws RemoteException {
+	public synchronized Remote cerca(String nomeLogico) throws RemoteException {
 		/*
 		 * if (nomeLogico.isEmpty()) throw new RemoteException(); else { for (int i = 0;
 		 * i < grandezza; i++) { if (map[i][0].equals(nomeLogico)) { return (Remote)
@@ -111,7 +111,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public Remote[] cercaTutti(String nomeLogico) throws RemoteException {
+	public synchronized Remote[] cercaTutti(String nomeLogico) throws RemoteException {
 		/*
 		 * // Qua secondo me sarebbe meglio fare in modo che magari faccia un primo
 		 * ciclo // per vedere quanti remote ci sono e poi fare un array // della
@@ -152,7 +152,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public String[] cercaTag(String tag) throws RemoteException {
+	public synchronized String[] cercaTag(String tag) throws RemoteException {
 		// Anche qui vale lo stesso commento di cercaTutti
 		/*
 		 * if (tag.isEmpty()) throw new RemoteException(); else { int j = 0; for (int i
@@ -185,7 +185,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public int associaTag(String nome_logico_server, String tag) throws RemoteException {
+	public synchronized int associaTag(String nome_logico_server, String tag) throws RemoteException {
 		int result = 0;
 		if ((nome_logico_server.isEmpty()) || (tag.isEmpty())) {
 			throw new RemoteException("nome logico o tag non valido");
@@ -203,7 +203,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public Object[][] restituisciTutti() throws RemoteException {
+	public synchronized Object[][] restituisciTutti() throws RemoteException {
 		/*
 		 * int count = 0; for (int i = 0; i < this.grandezza; i++) { if (map[i][0] !=
 		 * null) { count++; } } if (count == 0) throw new RemoteException();
@@ -247,7 +247,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public boolean eliminaTutti(String nome_logico) throws RemoteException {
+	public synchronized boolean eliminaTutti(String nome_logico) throws RemoteException {
 		/*
 		 * int numEliminati = 0; if (nome_logico.isEmpty()) throw new RemoteException();
 		 * else { for (int i = 0; i < ultimaEntry+1; i++) { if
