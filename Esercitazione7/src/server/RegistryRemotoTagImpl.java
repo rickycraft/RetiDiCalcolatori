@@ -12,6 +12,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	private int ultimaEntry;
 
 	private Object[][] map = new Object[grandezza][3];
+	private String[] tags = new String[2];
 	// 3 per nome_logico, rif_remoto e tag
 
 	// Formato nel seguente modo:
@@ -27,6 +28,16 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 			map[i][1] = null;
 			map[i][2] = null;
 		}
+		tags[0] = "tag1";
+		tags[1] = "tag2";
+	}
+
+	private boolean tagConsentito(String tag) {
+		for (int i = 0; i < tags.length; i++) {
+			if (tag.equals(tags[i]))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -174,15 +185,18 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	}
 
 	@Override
-	public boolean associaTag(String nome_logico_server, String tag) throws RemoteException {
-		boolean result = false;
+	public int associaTag(String nome_logico_server, String tag) throws RemoteException {
+		int result = 0;
 		if ((nome_logico_server.isEmpty()) || (tag.isEmpty())) {
 			throw new RemoteException("nome logico o tag non valido");
 		}
 		for (int i = 0; i < ultimaEntry + 1; i++) {
 			if (map[i][0].equals(nome_logico_server)) {
-				map[i][2] = tag;
-				result = true;
+				if (tagConsentito(tag)) {
+					map[i][2] = tag;
+					result++;
+				}
+
 			}
 		}
 		return result;
