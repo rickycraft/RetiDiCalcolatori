@@ -28,11 +28,31 @@ public class ClientServerRighe {
 		String completeRemoteRegistryName = "//" + registryRemotoHost + ":" + registryRemotoPort + "/"
 				+ registryRemotoName;
 
-		RegistryRemotoTagClient registryRemoto;
+		RegistryRemotoTagClient registryRemoto = null;
+		RemOp serverRMI = null;
+
 		try {
 			registryRemoto = (RegistryRemotoTagClient) Naming.lookup(completeRemoteRegistryName);
-			RemOp serverRMI = (RemOp) registryRemoto.cerca(serviceName);
+			boolean trovato = false;
+			System.out.println("vuoi cercare per nome logico (n) o per tag(t)");
+			String letta = stdIn.readLine();
+			while (!trovato) {
+				if (letta.equals("n")) {
+					serverRMI = (RemOp) registryRemoto.cerca(serviceName);
+					trovato = true;
+				} else {
+					if (letta.equals("t")) {
+						System.out.println("inserire il tag");
+						String[] serverNames = registryRemoto.cercaTag(stdIn.readLine());
+						for (String serverName : serverNames) {
+							System.out.println(serverName);
+						}
+					}
+				}
+				System.out.println("vuoi cercare per nome logico (n) o per tag(t)");
+				letta = stdIn.readLine();
 
+			}
 			// codice normale
 			System.out.println("ClientRMI: Servizio \"" + serviceName + "\" connesso");
 

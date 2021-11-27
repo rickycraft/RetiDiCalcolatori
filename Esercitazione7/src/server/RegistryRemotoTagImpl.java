@@ -1,5 +1,6 @@
 package server;
 
+import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -190,14 +191,16 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 		if ((nome_logico_server.isEmpty()) || (tag.isEmpty())) {
 			throw new RemoteException("nome logico o tag non valido");
 		}
-		for (int i = 0; i < ultimaEntry + 1; i++) {
-			if (map[i][0].equals(nome_logico_server)) {
-				if (tagConsentito(tag)) {
+		if (tagConsentito(tag)) {
+			for (int i = 0; i < ultimaEntry + 1; i++) {
+				if (map[i][0].equals(nome_logico_server)) {
 					map[i][2] = tag;
 					result++;
 				}
 
 			}
+		} else {
+			throw new RemoteException("tag non consentito");
 		}
 		return result;
 	}
@@ -279,6 +282,40 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 		}
 
 		return result;
+	}
+
+	// Avvio del Server RMI
+	public static void main(String[] args) {
+
+		int registryRemotoPort = 1099;
+		String registryRemotoHost = "localhost";
+		String registryRemotoName = "RegistryRemoto";
+
+		// Controllo dei parametri della riga di comando
+		if (args.length != 0 && args.length != 1) {
+			System.out.println("Sintassi: ServerImpl [registryPort]");
+			System.exit(1);
+		}
+		if (args.length == 1) {
+			try {
+				registryRemotoPort = Integer.parseInt(args[0]);
+			} catch (Exception e) {
+				System.out.println("Sintassi: ServerImpl [registryPort], registryPort intero");
+				System.exit(2);
+			}
+		}
+
+		// Registrazione del servizio RMI
+		String completeName = "//" + registryRemotoHost + ":" + registryRemotoPort + "/" + registryRemotoName;
+		try {
+			RegistryRemotoTagImpl serverRMI = new RegistryRemotoTagImpl();
+			Naming.rebind(completeName, serverRMI);
+			System.out.println("Server RMI: Servizio \"" + registryRemotoName + "\" registrato");
+		} catch (Exception e) {
+			System.err.println("Server RMI \"" + registryRemotoName + "\": " + e.getMessage());
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 }

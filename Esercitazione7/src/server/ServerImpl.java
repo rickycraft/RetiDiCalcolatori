@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,18 +24,11 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 		String registryRemotoName = "RegistryRemoto";
 		String serviceName = "RemOp";
 		String registryRemotoHost = args[0];
-		/*
-		 * if (args.length == 1) { try { registryRemotoPort = Integer.parseInt(args[0]);
-		 * } catch (NumberFormatException e) {
-		 * System.err.println("Formato: ServerImpl [registryPort]\n"); System.exit(-1);
-		 * } } else if (args.length > 1) {
-		 * System.err.println("Formato: ServerImpl [registryPort]\n"); System.exit(-1);
-		 * }
-		 */
 
+		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 		String completeRemoteRegistryName = "//" + registryRemotoHost + ":" + registryRemotoPort + "/"
 				+ registryRemotoName;
-		RegistryRemotoTagServer registryRemoto;
+		RegistryRemotoTagServer registryRemoto = null;
 		try {
 			registryRemoto = (RegistryRemotoTagServer) Naming.lookup(completeRemoteRegistryName);
 			ServerImpl serverRMI = new ServerImpl();
@@ -41,6 +36,17 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("vuoi aggiungere un tag al tuo servizio?");
+
+		try {
+			String tag = stdIn.readLine();
+			registryRemoto.associaTag(serviceName, tag);
+
+		} catch (RemoteException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
