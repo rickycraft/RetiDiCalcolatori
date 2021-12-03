@@ -1,4 +1,4 @@
-package registry;
+package severRighe;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
+import registry.RegistryRemotoTagServer;
 
 public class ServerImpl extends UnicastRemoteObject implements RemOp {
 

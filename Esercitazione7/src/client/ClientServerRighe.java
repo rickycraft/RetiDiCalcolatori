@@ -6,7 +6,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import registry.RegistryRemotoTagClient;
-import registry.RemOp;
+import severRighe.RemOp;
 
 public class ClientServerRighe {
 
@@ -54,6 +54,10 @@ public class ClientServerRighe {
 
 			}
 			// codice normale
+			//
+			//
+			//
+			//
 			System.out.println("ClientRMI: Servizio \"" + serviceName + "\" connesso");
 
 			System.out.println(cosavuoifare);

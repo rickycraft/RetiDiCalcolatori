@@ -1,4 +1,4 @@
-package serverSvolta;
+package serverCongresso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,10 @@ import java.rmi.server.UnicastRemoteObject;
 import registry.RegistryRemotoTagServer;
 
 public class ServerCongressoImpl extends UnicastRemoteObject implements ServerCongresso {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	static Programma prog[];
 
 	protected ServerCongressoImpl() throws RemoteException {

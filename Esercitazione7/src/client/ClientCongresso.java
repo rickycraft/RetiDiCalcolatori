@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 import java.rmi.Naming;
 
 import registry.RegistryRemotoTagClient;
-import serverSvolta.Programma;
-import serverSvolta.ServerCongresso;
+import serverCongresso.Programma;
+import serverCongresso.ServerCongresso;
 
 public class ClientCongresso {
 	public static void main(String[] args) {

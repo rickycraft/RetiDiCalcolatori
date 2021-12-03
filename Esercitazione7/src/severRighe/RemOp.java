@@ -1,4 +1,4 @@
-package registry;
+package severRighe;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

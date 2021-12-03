@@ -44,6 +44,7 @@ public class RegistryRemotoTagImpl implements RegistryRemotoTagServer {
 	@Override
 	public synchronized boolean aggiungiServer(String nome_logico, Remote rif_remoto) throws RemoteException {
 		boolean result = false;
+
 		if (nome_logico.isEmpty() || rif_remoto == null)
 			throw new RemoteException("nome logico o riferimento non valido");
 		else {

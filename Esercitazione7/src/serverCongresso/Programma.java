@@ -1,10 +1,14 @@
-package serverSvolta;
+package serverCongresso;
 
 import java.io.Serializable;
 
 public class Programma implements Serializable {
 	// classe per modellare ogni giornata del convegno
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String speaker[][] = new String[12][5];
 
 	public Programma() { // init con stringa nulla
