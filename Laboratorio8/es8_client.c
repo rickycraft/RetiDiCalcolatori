@@ -52,4 +52,5 @@ int main(int argc, char *argv[]) {
   }
   free(buff1);
   free(buff2);
+  clnt_destroy(cl);
 }
