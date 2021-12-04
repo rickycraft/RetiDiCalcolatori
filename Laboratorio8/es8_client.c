@@ -16,9 +16,10 @@ int main(int argc, char *argv[]) {
   }
 
   Wc *wc = file_scan_1(&argv[2], cl);
-  NameSize namesize = {argv[3], 10000};
+  NameSize namesize = {argv[3], atoi(argv[4])};
+  printf("name: %s, size: %d\n", namesize.nome, namesize.dim);
   int *count = dir_scan_1(&namesize, cl);
 
-  printf("l: %d, w: %d, c: %d, count: %d", wc->righe, wc->parole, wc->caratteri,
-         *count);
+  printf("l: %d, w: %d, c: %d, count: %d\n", wc->righe, wc->parole,
+         wc->caratteri, *count);
 }

@@ -15,7 +15,7 @@ che contiene tre interi corrispondenti al numero di caratteri
 parole e linee nel file, oppure un opportuno codice di errore in
 caso ad esempio il file sia vuoto oppure non sia presente sul server
 */
-Wc *file_scan_1(char **dirname, CLIENT *svc_req) {
+Wc *file_scan_1_svc(char **dirname, struct svc_req *rp) {
   FILE *fp;
   char righe[10], parole[10], caratteri[10];
   char command[1024] = "/usr/bin/wc ";
@@ -28,6 +28,10 @@ Wc *file_scan_1(char **dirname, CLIENT *svc_req) {
     ret.righe = atoi(righe);
     ret.parole = atoi(parole);
     ret.caratteri = atoi(caratteri);
+  } else {
+    ret.righe = -1;
+    ret.parole = -1;
+    ret.caratteri = -1;
   }
   pclose(fp);
   return &ret;
@@ -47,22 +51,25 @@ long int stat_filesize(char *filename) {
   return statbuf.st_size;
 }
 
-int *dir_scan_1(NameSize *namesize, CLIENT *svc_req) {
+int *dir_scan_1_svc(NameSize *namesize, struct svc_req *rp) {
   struct dirent *dd;
   DIR *dir;
   const char *current_dir = ".";
-  char dirname[1024];
-  int soglia;
-  static int n = 0;
-  if (chdir(dirname) < 0) {
+  char cwd[1024];
+  getcwd(cwd, 1024);
+  static int n;
+  if (chdir(namesize->nome) < 0) {
     n = -1;
     return &n;
+  } else {
+    n = 0;
   }
   dir = opendir(current_dir);
   while ((dd = readdir(dir)) != NULL) {
     if (dd->d_type == DT_REG)
-      if (stat_filesize(dd->d_name) > soglia) n++;
+      if (stat_filesize(dd->d_name) > namesize->dim) n++;
   }
   closedir(dir);
+  chdir(cwd);
   return &n;
 }
