@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[]) {
   CLIENT *cl;
-  char *server;
-  char *buff1, *buff2;
+  char *server, *buff1, *buff2;
+  int soglia;
   buff1 = malloc(BUFF_DIM * sizeof(char));
   buff2 = malloc(BUFF_DIM * sizeof(char));
   char c[10];
@@ -41,7 +41,11 @@ int main(int argc, char *argv[]) {
       gets(buff1);
       printf("Digita la soglia minima: \n");
       gets(buff2);
-      NameSize namesize = {buff1, atoi(buff2)};
+      soglia = atoi(buff2);
+      if (soglia == 0) {
+        printf("soglia non è un intero, uso 0 come default\n");
+      }
+      NameSize namesize = {buff1, soglia};
       int *count = dir_scan_1(&namesize, cl);
       if (count == NULL) {
         fprintf(stderr, "%s: %s fallisce la rpc n\n", argv[0], server);
