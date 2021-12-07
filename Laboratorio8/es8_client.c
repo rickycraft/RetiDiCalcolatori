@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
       if (wc == NULL) {
         fprintf(stderr, "%s: %s fallisce la rpc n\n", argv[0], server);
         clnt_perror(cl, server);
+      } else if (wc->caratteri == -1) {
+        printf("Non sono riuscito a trovare il file\n");
       } else {
         printf("l: %d, p: %d, c: %d\n", wc->righe, wc->parole, wc->caratteri);
       }

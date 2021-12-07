@@ -24,7 +24,10 @@ Wc *file_scan_1_svc(char **filename, struct svc_req *rp) {
   ret.caratteri = 0;
 
   fd = open(*filename, O_RDONLY);
-  if (fd < 0) return &ret;
+  if (fd < 0) {
+    ret.caratteri == -1;
+    return &ret;
+  }
 
   while (read(fd, &read_char, sizeof(char)) > 0) {
     if (read_char == '\n') {
