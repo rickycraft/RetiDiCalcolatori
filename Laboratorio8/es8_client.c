@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
   while (gets(c)) {
     if (c[0] == 'f') {
       // file scan
-      printf("Digita il nome del file: ");
-      fgets(buff1, BUFF_DIM, stdin);
+      printf("Digita il nome del file: \n");
+      gets(buff1);
       Wc *wc = file_scan_1(&buff1, cl);
       if (wc == NULL) {
         fprintf(stderr, "%s: %s fallisce la rpc n\n", argv[0], server);

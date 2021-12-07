@@ -15,6 +15,32 @@ che contiene tre interi corrispondenti al numero di caratteri
 parole e linee nel file, oppure un opportuno codice di errore in
 caso ad esempio il file sia vuoto oppure non sia presente sul server
 */
+Wc *file_scan_1_svc(char **filename, struct svc_req *rp) {
+  char read_char;
+  int fd;
+  static Wc ret;
+  ret.righe = 0;
+  ret.parole = 0;
+  ret.caratteri = 0;
+
+  fd = open(*filename, O_RDONLY);
+  if (fd < 0) return &ret;
+
+  while (read(fd, &read_char, sizeof(char)) > 0) {
+    if (read_char == '\n') {
+      ret.righe++;
+      ret.parole++;
+    } else if (read_char == ' ') {
+      ret.parole++;
+    }
+    ret.caratteri++;
+  }
+
+  close(fd);
+  return &ret;
+}
+
+/*
 Wc *file_scan_1_svc(char **dirname, struct svc_req *rp) {
   FILE *fp;
   char righe[10], parole[10], caratteri[10];
@@ -36,6 +62,7 @@ Wc *file_scan_1_svc(char **dirname, struct svc_req *rp) {
   pclose(fp);
   return &ret;
 }
+*/
 
 /*
 parametro d’ingresso il nome del direttorio remoto e una soglia numerica. In
