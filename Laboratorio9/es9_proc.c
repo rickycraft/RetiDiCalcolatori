@@ -98,6 +98,17 @@ parametro d’ingresso il nome del candidato e se si vuole aggiungere ridurre il
 int *esprimi_voto_1_svc(CandidatoVoto *candidato, struct svc_req *rp) {
   if(tabella==NULL){
     creazioneTabella();
+    Candidato c={"candidato1","giudice1",'A',"file",'A',12};
+    
+    aggiungiCandidato(c,0);
+   c.nomeCandidato="candidato2";
+   c.nomeGiudice="giudice2";
+   c.categoria='A';
+   c.nomeFile="file";
+   c.fase='A';
+   c.voto=2;
+  aggiungiCandidato(c,1);
+
   }
   //return 1 se è andato tutto bene, 0 se non ha trovato il candidato
   static int n=0;
