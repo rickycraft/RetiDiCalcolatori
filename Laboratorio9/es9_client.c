@@ -23,10 +23,21 @@ int main(int argc, char *argv[]) {
   printf("che programma vuoi usare?\nclassifica_giudici (c) | esprimi_voto (e)\n");
   while (gets(c)) {
     if (c[0] == 'c') {
-      // file scan
+      
+      Giudici *g[]=classifica_giudici_1(cl);
+      printf("Giudice \t Voto\n");
+      for(int i=0;i<20;i++){
+        
+
+        printf("%s %d\n",g[i]->giudice,g[i]->voto);
+
+      }
+      
+      
+      
+
 
     } else if (c[0] == 'e') {
-      // dir scan
       printf("Digita il nome del concorrente: \n");
       gets(buff1);
       printf("Vuoi aggiungere o togliere un voto? aggiungere(+) | togliere(-): \n");

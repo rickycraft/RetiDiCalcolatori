@@ -20,7 +20,7 @@ struct CandidatoVoto {
 
 program OPERAZIONIPROG {
   version OPERAZIONIVERS {
-    Giudici classifica_giudici() = 1;
+    Giudici classifica_giudici(void) = 1;
     int esprimi_voto(CandidatoVoto) = 2;
   } = 1;
 } = 0x20000013;

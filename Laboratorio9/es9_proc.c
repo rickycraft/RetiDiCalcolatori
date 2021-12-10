@@ -6,16 +6,15 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
 #include "operazioni.h"
+#define GRANDEZZATABELLA 10
+#define GRANDEZZAGIUDICI 20
 
-
-const int grandezzaTabella=10;
-static Candidato tabella[grandezzaTabella];
+Candidato tabella[GRANDEZZATABELLA];
 
 void creazioneTabella(){
 //creo la tabella e la riempio di righe vuote
-for(int i=0; i<grandezzaTabella; i++){
+for(int i=0; i<GRANDEZZATABELLA; i++){
 
   tabella[i].nomeCandidato="L";
   tabella[i].nomeGiudice="L";
@@ -38,18 +37,38 @@ int compare(const void * left, const void * right) {
     }
 }
 
+void aggiungiCandidato(Candidato c, int i){
+
+  tabella[i]=c;
+}
+
 /*
 restituisce una struttura dati che la classifica dei giudici in ordine di voti
 */
-Giudici *classifica_giudici_1_svc(struct svc_req *rp) {
-  const int grandezzaGiudici=20;
-  static Giudici ret[grandezzaGiudici];
+Giudici *classifica_giudici_1_svc(void *in,struct svc_req *rp) {
+
+  if(tabella==NULL){
+    creazioneTabella();
+    Candidato c={"candidato1","giudice1",'A',"file",'A',12};
+    
+    aggiungiCandidato(c,0);
+   c.nomeCandidato="candidato2";
+   c.nomeGiudice="giudice2";
+   c.categoria='A';
+   c.nomeFile="file";
+   c.fase='A';
+   c.voto=2;
+  aggiungiCandidato(c,1);
+
+  }
+
+  static Giudici ret[GRANDEZZAGIUDICI];
   int celleRiempite=0;
-  for(int i=0; i<grandezzaTabella;i++){
+  for(int i=0; i<GRANDEZZATABELLA;i++){
     if(strcmp(tabella[i].nomeGiudice,"L")!=0){
       //Esiste giudice in quella riga della tabella
       int esiste=0;
-      for(int j=0;j<grandezzaGiudici;j++){
+      for(int j=0;j<GRANDEZZAGIUDICI;j++){
         if(strcmp(tabella[i].nomeGiudice,ret[j].giudice)==0){
           //se è gia presente nella lista dei giudici allora sommo il voto
           ret[j].voto+=tabella[i].voto;
@@ -68,29 +87,22 @@ Giudici *classifica_giudici_1_svc(struct svc_req *rp) {
   
   //ora bisogna ordinare
   qsort(ret, sizeof(ret)/sizeof(Giudici), sizeof(Giudici), compare);
-  return &ret;
+  return ret;
 }
 
 /*
-parametro d’ingresso il nome del direttorio remoto e una soglia numerica. In
-caso di successo, restituisce un intero positivo con il
-numero di file la cui dimensione supera la soglia inserita, -1 altrimenti
+parametro d’ingresso il nome del candidato e se si vuole aggiungere ridurre il voto
 */
-long int stat_filesize(char *filename) {
-  struct stat statbuf;
-  if (stat(filename, &statbuf) == -1) {
-    printf("failed to stat %s\n", filename);
-    return -1;
+
+
+int *esprimi_voto_1_svc(CandidatoVoto *candidato, struct svc_req *rp) {
+  if(tabella==NULL){
+    creazioneTabella();
   }
-  return statbuf.st_size;
-}
-
-int *esprimi_voto_svc(CandidatoVoto *candidato, struct svc_req *rp) {
-
   //return 1 se è andato tutto bene, 0 se non ha trovato il candidato
-  int n=0;
+  static int n=0;
 
-  for(int i=0;i<grandezzaTabella;i++){
+  for(int i=0;i<GRANDEZZATABELLA;i++){
     if(strcmp(tabella[i].nomeCandidato,candidato->nome)==0){
       //abbiamo trovato il candidato giusto
       if((candidato->tipoOperazione)=='+'){
