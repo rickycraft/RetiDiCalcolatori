@@ -39,7 +39,7 @@ operazioniprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 
 	case esprimi_voto:
 		_xdr_argument = (xdrproc_t) xdr_CandidatoVoto;
-		_xdr_result = (xdrproc_t) xdr_void;
+		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) esprimi_voto_1_svc;
 		break;
 

@@ -9,6 +9,8 @@
 
 #include "operazioni.h"
 
+
+
 /*
 parametro d’ingresso il nome del file e restituisce una struttura dati
 che contiene tre interi corrispondenti al numero di caratteri

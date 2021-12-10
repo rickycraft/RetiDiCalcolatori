@@ -18,13 +18,33 @@ xdr_Giudici (XDR *xdrs, Giudici *objp)
 }
 
 bool_t
+xdr_Candidato (XDR *xdrs, Candidato *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->nomeCandidato, 30))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->nomeGiudice, 30))
+		 return FALSE;
+	 if (!xdr_char (xdrs, &objp->categoria))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->nomeFile, 30))
+		 return FALSE;
+	 if (!xdr_char (xdrs, &objp->fase))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->voto))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_CandidatoVoto (XDR *xdrs, CandidatoVoto *objp)
 {
 	register int32_t *buf;
 
 	 if (!xdr_string (xdrs, &objp->nome, 30))
 		 return FALSE;
-	 if (!xdr_string (xdrs, &objp->tipoOperazione, 1))
+	 if (!xdr_char (xdrs, &objp->tipoOperazione))
 		 return FALSE;
 	return TRUE;
 }

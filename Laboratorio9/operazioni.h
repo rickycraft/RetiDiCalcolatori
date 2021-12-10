@@ -20,9 +20,19 @@ struct Giudici {
 };
 typedef struct Giudici Giudici;
 
+struct Candidato {
+	char *nomeCandidato;
+	char *nomeGiudice;
+	char categoria;
+	char *nomeFile;
+	char fase;
+	int voto;
+};
+typedef struct Candidato Candidato;
+
 struct CandidatoVoto {
 	char *nome;
-	char *tipoOperazione;
+	char tipoOperazione;
 };
 typedef struct CandidatoVoto CandidatoVoto;
 
@@ -34,8 +44,8 @@ typedef struct CandidatoVoto CandidatoVoto;
 extern  Giudici * classifica_giudici_1(void *, CLIENT *);
 extern  Giudici * classifica_giudici_1_svc(void *, struct svc_req *);
 #define esprimi_voto 2
-extern  void * esprimi_voto_1(CandidatoVoto *, CLIENT *);
-extern  void * esprimi_voto_1_svc(CandidatoVoto *, struct svc_req *);
+extern  int * esprimi_voto_1(CandidatoVoto *, CLIENT *);
+extern  int * esprimi_voto_1_svc(CandidatoVoto *, struct svc_req *);
 extern int operazioniprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -43,8 +53,8 @@ extern int operazioniprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 extern  Giudici * classifica_giudici_1();
 extern  Giudici * classifica_giudici_1_svc();
 #define esprimi_voto 2
-extern  void * esprimi_voto_1();
-extern  void * esprimi_voto_1_svc();
+extern  int * esprimi_voto_1();
+extern  int * esprimi_voto_1_svc();
 extern int operazioniprog_1_freeresult ();
 #endif /* K&R C */
 
@@ -52,10 +62,12 @@ extern int operazioniprog_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_Giudici (XDR *, Giudici*);
+extern  bool_t xdr_Candidato (XDR *, Candidato*);
 extern  bool_t xdr_CandidatoVoto (XDR *, CandidatoVoto*);
 
 #else /* K&R C */
 extern bool_t xdr_Giudici ();
+extern bool_t xdr_Candidato ();
 extern bool_t xdr_CandidatoVoto ();
 
 #endif /* K&R C */
