@@ -13,10 +13,18 @@
 extern "C" {
 #endif
 
+#define NUMGIUDICI 3
+#define LUNGHEZZA_NOME_GIUDICE 30
+#define LUNGHEZZA_NOME_CANDIDATO 30
+
+struct Giudice {
+	char *nome;
+	int votiTotali;
+};
+typedef struct Giudice Giudice;
 
 struct Giudici {
-	char *giudice;
-	int voto;
+	Giudice giudici_ordinati[NUMGIUDICI];
 };
 typedef struct Giudici Giudici;
 
@@ -61,11 +69,13 @@ extern int operazioniprog_1_freeresult ();
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_Giudice (XDR *, Giudice*);
 extern  bool_t xdr_Giudici (XDR *, Giudici*);
 extern  bool_t xdr_Candidato (XDR *, Candidato*);
 extern  bool_t xdr_CandidatoVoto (XDR *, CandidatoVoto*);
 
 #else /* K&R C */
+extern bool_t xdr_Giudice ();
 extern bool_t xdr_Giudici ();
 extern bool_t xdr_Candidato ();
 extern bool_t xdr_CandidatoVoto ();

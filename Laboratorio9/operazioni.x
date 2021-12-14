@@ -1,20 +1,29 @@
-struct Giudici {
-  string giudice<30>;
-  int voto;
+const NUMGIUDICI=3;
+const LUNGHEZZA_NOME_GIUDICE=30;
+const LUNGHEZZA_NOME_CANDIDATO=30;
+
+struct Giudice {
+  string nome<256>;
+  int votiTotali;
   };
+
+struct Giudici{
+    Giudice giudici_ordinati[NUMGIUDICI];
+    
+};
 
 struct Candidato{
 
-  string nomeCandidato<30>;
-  string nomeGiudice<30>;
+  char *nomeCandidato;
+  char *nomeGiudice;
   char categoria;
-  string nomeFile<30>;
+  char *nomeFile;
   char fase;
   int voto;
 };
 
 struct CandidatoVoto {
-  string nome<30>;
+  string nome<256>;
   char tipoOperazione;
 };
 
