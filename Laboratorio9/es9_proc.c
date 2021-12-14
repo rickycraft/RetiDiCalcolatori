@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "operazioni.h"
-#define GRANDEZZATABELLA 10
+#define GRANDEZZATABELLA 5
 
 
 typedef struct {
@@ -21,8 +21,11 @@ typedef struct {
 }Candidato;
 
 Candidato tabella[GRANDEZZATABELLA];
-Giudice listaGiudici[NUMGIUDICI];
+//Giudice listaGiudici[NUMGIUDICI];
 static int tabellaGiaFatta = 0;
+static int n = 0;
+static Output res;
+  
 void creazioneTabella()
 {
   Candidato riga;
@@ -76,7 +79,6 @@ restituisce una struttura dati che è la classifica dei giudici in ordine di vot
 */
 Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
 {
-  static Output res;
   int presente, max, count = 0;
   int i, k;
   int presenteInLista;
@@ -90,17 +92,11 @@ Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
   for (i = 0; i < NUMGIUDICI; i++)
   {
     printf("inizializzo res\n");
-    res.giudici_ordinati[i].votiTotali = -1;
+    res.giudici_ordinati[i].votiTotali = 0;
     res.giudici_ordinati[i].nome = malloc(strlen("L") + 1);
     strcpy(res.giudici_ordinati[i].nome, "L");
   }
-  //inizializzazione di listaGiudici
-  for (int i = 0; i < NUMGIUDICI; i++)
-  {
-    listaGiudici[i].nome = malloc(strlen("L") + 1);
-    strcpy(listaGiudici[i].nome, "L");
-    listaGiudici[i].votiTotali = 0;
-  }
+  
 
   //riempio listaGiudici con una riga per giudice
   for (int i = 0; i < GRANDEZZATABELLA; i++)
@@ -109,18 +105,18 @@ Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
 
     for (int k = 0; k < NUMGIUDICI; k++)
     {
-      if (strcmp(listaGiudici[k].nome, tabella[i].nomeGiudice) == 0)
+      if (strcmp(res.giudici_ordinati[k].nome, tabella[i].nomeGiudice) == 0)
       {
-        listaGiudici[k].votiTotali += tabella[i].voto;
+        res.giudici_ordinati[k].votiTotali += tabella[i].voto;
         presenteInLista = 1;
       }
     }
     if (presenteInLista == 0)
     {
-      free(listaGiudici[indLista].nome);
-      listaGiudici[indLista].nome = malloc(strlen(tabella[i].nomeGiudice) + 1);
-      strcpy(listaGiudici[indLista].nome, tabella[i].nomeGiudice);
-      listaGiudici[indLista].votiTotali = tabella[i].voto;
+      free(res.giudici_ordinati[indLista].nome);
+      res.giudici_ordinati[indLista].nome = malloc(strlen(tabella[i].nomeGiudice) + 1);
+      strcpy(res.giudici_ordinati[indLista].nome, tabella[i].nomeGiudice);
+      res.giudici_ordinati[indLista].votiTotali = tabella[i].voto;
       indLista++;
     }
   }
@@ -131,17 +127,17 @@ Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
     for (k = 0; k < indLista; k++)
     {
 
-      if (res.giudici_ordinati[i].votiTotali < listaGiudici[k].votiTotali) 
+      if (res.giudici_ordinati[i].votiTotali < res.giudici_ordinati[k].votiTotali) 
       {
 
         free(res.giudici_ordinati[i].nome);
-        res.giudici_ordinati[i].nome = malloc(strlen(listaGiudici[k].nome) + 1);
-        strcpy(res.giudici_ordinati[i].nome, listaGiudici[k].nome);
-        res.giudici_ordinati[i].votiTotali = listaGiudici[k].votiTotali;
+        res.giudici_ordinati[i].nome = malloc(strlen(res.giudici_ordinati[k].nome) + 1);
+        strcpy(res.giudici_ordinati[i].nome, res.giudici_ordinati[k].nome);
+        res.giudici_ordinati[i].votiTotali = res.giudici_ordinati[k].votiTotali;
         count = k;
       }
     }
-    listaGiudici[count].votiTotali = 0; //per non riconsiderarlo
+    res.giudici_ordinati[count].votiTotali = 0; //per non riconsiderarlo
   }
   for (i = 0; i < NUMGIUDICI; i++)
   {
@@ -158,12 +154,11 @@ parametro d’ingresso il nome del candidato e se si vuole aggiungere ridurre il
 int *esprimi_voto_1_svc(CandidatoVoto *candidato, struct svc_req *rp)
 {
   //return 1 se è andato tutto bene, 0 se non ha trovato il candidato
-  static int n = 0;
   if (tabellaGiaFatta == 0)
   {
     creazioneTabella();
   }
-
+  n=0;
   printf("Ricevuto input candidato %s operazione %c \n", candidato->nome, candidato->tipoOperazione);
 
   for (int i = 0; i < GRANDEZZATABELLA; i++)

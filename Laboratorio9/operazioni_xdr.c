@@ -10,7 +10,7 @@ xdr_Giudice (XDR *xdrs, Giudice *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_string (xdrs, &objp->nome, 256))
+	 if (!xdr_string (xdrs, &objp->nome, LUNGHEZZA_NOME_GIUDICE))
 		 return FALSE;
 	 if (!xdr_int (xdrs, &objp->votiTotali))
 		 return FALSE;
@@ -34,7 +34,7 @@ xdr_CandidatoVoto (XDR *xdrs, CandidatoVoto *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_string (xdrs, &objp->nome, 256))
+	 if (!xdr_string (xdrs, &objp->nome, LUNGHEZZA_NOME_CANDIDATO))
 		 return FALSE;
 	 if (!xdr_char (xdrs, &objp->tipoOperazione))
 		 return FALSE;

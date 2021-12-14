@@ -3,7 +3,7 @@ const LUNGHEZZA_NOME_GIUDICE=30;
 const LUNGHEZZA_NOME_CANDIDATO=30;
 
 struct Giudice {
-  string nome<256>;
+  string nome<LUNGHEZZA_NOME_GIUDICE>;
   int votiTotali;
   };
 
@@ -13,7 +13,7 @@ struct Output{
 
 
 struct CandidatoVoto {
-  string nome<256>;
+  string nome<LUNGHEZZA_NOME_CANDIDATO>;
   char tipoOperazione;
 };
 
