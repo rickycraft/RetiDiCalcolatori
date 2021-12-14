@@ -9,11 +9,20 @@
 #include "operazioni.h"
 #define GRANDEZZATABELLA 10
 
+
+typedef struct {
+
+  char *nomeCandidato;
+  char *nomeGiudice;
+  char categoria;
+  char *nomeFile;
+  char fase;
+  int voto;
+}Candidato;
+
 Candidato tabella[GRANDEZZATABELLA];
 Giudice listaGiudici[NUMGIUDICI];
-
 static int tabellaGiaFatta = 0;
-
 void creazioneTabella()
 {
   Candidato riga;
@@ -67,7 +76,6 @@ restituisce una struttura dati che è la classifica dei giudici in ordine di vot
 */
 Giudici *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
 {
-  printf("[DEBUG] Ricevuta richiesta classifica_giudici_1_svc \n");
   static Giudici res;
   int presente, max, count = 0;
   int i, k;

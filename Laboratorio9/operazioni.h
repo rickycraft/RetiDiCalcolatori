@@ -28,16 +28,6 @@ struct Giudici {
 };
 typedef struct Giudici Giudici;
 
-struct Candidato {
-	char *nomeCandidato;
-	char *nomeGiudice;
-	char categoria;
-	char *nomeFile;
-	char fase;
-	int voto;
-};
-typedef struct Candidato Candidato;
-
 struct CandidatoVoto {
 	char *nome;
 	char tipoOperazione;
@@ -71,13 +61,11 @@ extern int operazioniprog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_Giudice (XDR *, Giudice*);
 extern  bool_t xdr_Giudici (XDR *, Giudici*);
-extern  bool_t xdr_Candidato (XDR *, Candidato*);
 extern  bool_t xdr_CandidatoVoto (XDR *, CandidatoVoto*);
 
 #else /* K&R C */
 extern bool_t xdr_Giudice ();
 extern bool_t xdr_Giudici ();
-extern bool_t xdr_Candidato ();
 extern bool_t xdr_CandidatoVoto ();
 
 #endif /* K&R C */

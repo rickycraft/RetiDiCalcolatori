@@ -12,15 +12,6 @@ struct Giudici{
     
 };
 
-struct Candidato{
-
-  char *nomeCandidato;
-  char *nomeGiudice;
-  char categoria;
-  char *nomeFile;
-  char fase;
-  int voto;
-};
 
 struct CandidatoVoto {
   string nome<256>;
