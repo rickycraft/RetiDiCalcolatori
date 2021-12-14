@@ -103,7 +103,7 @@ Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
   }
 
   //riempio listaGiudici con una riga per giudice
-  for (int i = 0; i < NUMGIUDICI; i++)
+  for (int i = 0; i < GRANDEZZATABELLA; i++)
   {
     presenteInLista = 0;
 
