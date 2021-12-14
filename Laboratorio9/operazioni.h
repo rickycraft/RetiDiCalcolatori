@@ -23,10 +23,10 @@ struct Giudice {
 };
 typedef struct Giudice Giudice;
 
-struct Giudici {
+struct Output {
 	Giudice giudici_ordinati[NUMGIUDICI];
 };
-typedef struct Giudici Giudici;
+typedef struct Output Output;
 
 struct CandidatoVoto {
 	char *nome;
@@ -60,12 +60,12 @@ extern int operazioniprog_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_Giudice (XDR *, Giudice*);
-extern  bool_t xdr_Giudici (XDR *, Giudici*);
+extern  bool_t xdr_Output (XDR *, Output*);
 extern  bool_t xdr_CandidatoVoto (XDR *, CandidatoVoto*);
 
 #else /* K&R C */
 extern bool_t xdr_Giudice ();
-extern bool_t xdr_Giudici ();
+extern bool_t xdr_Output ();
 extern bool_t xdr_CandidatoVoto ();
 
 #endif /* K&R C */

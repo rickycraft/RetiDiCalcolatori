@@ -7,9 +7,8 @@ struct Giudice {
   int votiTotali;
   };
 
-struct Giudici{
+struct Output{
     Giudice giudici_ordinati[NUMGIUDICI];
-    
 };
 
 

@@ -18,7 +18,7 @@ xdr_Giudice (XDR *xdrs, Giudice *objp)
 }
 
 bool_t
-xdr_Giudici (XDR *xdrs, Giudici *objp)
+xdr_Output (XDR *xdrs, Output *objp)
 {
 	register int32_t *buf;
 

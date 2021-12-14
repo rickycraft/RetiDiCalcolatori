@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
   char *server, *buff1, *buff2;
   int soglia;
   void *in;
-  Giudici *result_giudici;
+  Output *result_giudici;
   CandidatoVoto *candidato;
   int *result_espVoto;
   buff1 = malloc(BUFF_DIM * sizeof(char)); //per esprimi_voto
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     if (c[0] == 'c')
     { //classifica Giudici
       result_giudici = classifica_giudici_1(in, cl);
-      if (result_giudici == (Giudici *)NULL)
+      if (result_giudici == (Output *)NULL)
       {
         fprintf(stderr, "%s: %s fallisce la rpc in classifica_giudici \n", argv[0], server);
         clnt_perror(cl, server);

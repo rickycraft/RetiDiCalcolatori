@@ -74,9 +74,9 @@ void creazioneTabella()
 /*
 restituisce una struttura dati che è la classifica dei giudici in ordine di voti
 */
-Giudici *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
+Output *classifica_giudici_1_svc(void *noPar, struct svc_req *rp)
 {
-  static Giudici res;
+  static Output res;
   int presente, max, count = 0;
   int i, k;
   int presenteInLista;
