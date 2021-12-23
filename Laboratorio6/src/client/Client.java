@@ -45,10 +45,10 @@ public class Client {
 					// Chiede conta_righe
 					System.out.println("Inserisci il nome del file:");
 					String nomeFile = stdIn.readLine();
-
 					System.out.println("Inserisci il numero:");
+
 					int val = 0;
-					Boolean checkIfNum = false;
+					boolean checkIfNum = false;
 					while (!checkIfNum) {
 						try {
 							val = Integer.parseInt(stdIn.readLine());
@@ -59,7 +59,6 @@ public class Client {
 						}
 					}
 					System.out.println("nomeFile: " + nomeFile + "\t num: " + val);
-
 					try {
 						int numRighe = serverRMI.conta_righe(nomeFile, val);
 						System.out.println("Il numero di righe che hanno piu di " + val + " righe e: " + numRighe);

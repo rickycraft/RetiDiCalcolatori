@@ -67,11 +67,11 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 	}
 
 	@Override
-	public String elimina_riga(String nomeFile, int numRigaElim) throws RemoteException {
+	public synchronized String elimina_riga(String nomeFile, int numRigaElim) throws RemoteException {
 		int indiceRiga = 0;
 		int righeFile = 0;
-
 		String lineaLetta;
+
 		try {
 			BufferedReader rd = new BufferedReader(new FileReader(nomeFile));
 			System.out.println("File aperto");
@@ -98,7 +98,6 @@ public class ServerImpl extends UnicastRemoteObject implements RemOp {
 			} else {
 				File fileOg = new File(nomeFile);
 				fileOg.delete();
-
 				fileTemp.renameTo(fileOg);
 				System.out.println("file sostituito");
 				return nomeFile + ";" + righeFile;
