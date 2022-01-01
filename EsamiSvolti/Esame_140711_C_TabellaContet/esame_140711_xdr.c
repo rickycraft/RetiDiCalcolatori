@@ -3,7 +3,19 @@
  * It was generated using rpcgen.
  */
 
-#include "operazioni.h"
+#include "esame_140711.h"
+
+bool_t
+xdr_Parola (XDR *xdrs, Parola *objp)
+{
+	register int32_t *buf;
+
+	int i;
+	 if (!xdr_vector (xdrs, (char *)objp->parola, LUNGHEZZA_PAROLA,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	return TRUE;
+}
 
 bool_t
 xdr_RigaRicerca (XDR *xdrs, RigaRicerca *objp)
@@ -55,27 +67,15 @@ xdr_Candidato (XDR *xdrs, Candidato *objp)
 }
 
 bool_t
-xdr_Parola (XDR *xdrs, Parola *objp)
-{
-	register int32_t *buf;
-
-	int i;
-	 if (!xdr_vector (xdrs, (char *)objp->parola, LUNGHEZZA_PAROLA,
-		sizeof (char), (xdrproc_t) xdr_char))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
 xdr_Periodo (XDR *xdrs, Periodo *objp)
 {
 	register int32_t *buf;
 
 	int i;
-	 if (!xdr_vector (xdrs, (char *)objp->dataIniziale, 8,
+	 if (!xdr_vector (xdrs, (char *)objp->dataIniziale, 11,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
-	 if (!xdr_vector (xdrs, (char *)objp->dataFinale, 8,
+	 if (!xdr_vector (xdrs, (char *)objp->dataFinale, 11,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
 	return TRUE;
@@ -87,7 +87,7 @@ xdr_CandidatoParola (XDR *xdrs, CandidatoParola *objp)
 	register int32_t *buf;
 
 	int i;
-	 if (!xdr_vector (xdrs, (char *)objp->nomeCandidato, LUNGHEZZA_NOME,
+	 if (!xdr_vector (xdrs, (char *)objp->nome, LUNGHEZZA_NOME,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
 	 if (!xdr_Parola (xdrs, &objp->p))

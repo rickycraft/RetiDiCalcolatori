@@ -1,8 +1,14 @@
 
 const LUNGHEZZA_NOME=30;
 const LUNGHEZZA_NOME_FILE=30;
-const LUNGHEZZA_PAROLA=10;
+const LUNGHEZZA_PAROLA=30;
+
 const NUM_PAROLE=2;
+
+
+struct Parola{
+    char parola[LUNGHEZZA_PAROLA];
+};
 
 struct RigaRicerca{
   char nome[LUNGHEZZA_NOME];
@@ -22,17 +28,14 @@ struct Candidato {
   Parola p[NUM_PAROLE];  
   };
 
-struct Parola{
-    char parola[LUNGHEZZA_PAROLA];
-};
 
 struct Periodo{
-  char dataIniziale[8];
-  char dataFinale[8];
+  char dataIniziale[11]; 
+  char dataFinale[11];
 };
 
 struct CandidatoParola{
-  char nomeCandidato[LUNGHEZZA_NOME];
+  char nome[LUNGHEZZA_NOME];
   Parola p;
 };
 

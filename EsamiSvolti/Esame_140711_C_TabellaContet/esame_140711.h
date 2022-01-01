@@ -3,8 +3,8 @@
  * It was generated using rpcgen.
  */
 
-#ifndef _OPERAZIONI_H_RPCGEN
-#define _OPERAZIONI_H_RPCGEN
+#ifndef _ESAME_140711_H_RPCGEN
+#define _ESAME_140711_H_RPCGEN
 
 #include <rpc/rpc.h>
 
@@ -15,8 +15,13 @@ extern "C" {
 
 #define LUNGHEZZA_NOME 30
 #define LUNGHEZZA_NOME_FILE 30
-#define LUNGHEZZA_PAROLA 10
+#define LUNGHEZZA_PAROLA 30
 #define NUM_PAROLE 2
+
+struct Parola {
+	char parola[LUNGHEZZA_PAROLA];
+};
+typedef struct Parola Parola;
 
 struct RigaRicerca {
 	char nome[LUNGHEZZA_NOME];
@@ -38,19 +43,14 @@ struct Candidato {
 };
 typedef struct Candidato Candidato;
 
-struct Parola {
-	char parola[LUNGHEZZA_PAROLA];
-};
-typedef struct Parola Parola;
-
 struct Periodo {
-	char dataIniziale[8];
-	char dataFinale[8];
+	char dataIniziale[11];
+	char dataFinale[11];
 };
 typedef struct Periodo Periodo;
 
 struct CandidatoParola {
-	char nomeCandidato[LUNGHEZZA_NOME];
+	char nome[LUNGHEZZA_NOME];
 	Parola p;
 };
 typedef struct CandidatoParola CandidatoParola;
@@ -80,18 +80,18 @@ extern int proviniprog_1_freeresult ();
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_Parola (XDR *, Parola*);
 extern  bool_t xdr_RigaRicerca (XDR *, RigaRicerca*);
 extern  bool_t xdr_Tabella (XDR *, Tabella*);
 extern  bool_t xdr_Candidato (XDR *, Candidato*);
-extern  bool_t xdr_Parola (XDR *, Parola*);
 extern  bool_t xdr_Periodo (XDR *, Periodo*);
 extern  bool_t xdr_CandidatoParola (XDR *, CandidatoParola*);
 
 #else /* K&R C */
+extern bool_t xdr_Parola ();
 extern bool_t xdr_RigaRicerca ();
 extern bool_t xdr_Tabella ();
 extern bool_t xdr_Candidato ();
-extern bool_t xdr_Parola ();
 extern bool_t xdr_Periodo ();
 extern bool_t xdr_CandidatoParola ();
 
@@ -101,4 +101,4 @@ extern bool_t xdr_CandidatoParola ();
 }
 #endif
 
-#endif /* !_OPERAZIONI_H_RPCGEN */
+#endif /* !_ESAME_140711_H_RPCGEN */
