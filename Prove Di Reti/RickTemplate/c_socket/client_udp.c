@@ -16,14 +16,12 @@
 int main(int argc, char **argv) {
   struct hostent *host;
   struct sockaddr_in clientaddr, servaddr;
-  int sd, nread, port;
-
-  int len;
+  int sd, nread, port, len;
   char tmp[DIM_BUFF];
 #pragma region setup
   /* CONTROLLO ARGOMENTI ---------------------------------- */
   if (argc != 3) {
-    printf("#client# Error: argc != 3\n", argv[0]);
+    printf("client# Error: argc != 3\n", argv[0]);
     exit(1);
   }
 
@@ -32,21 +30,21 @@ int main(int argc, char **argv) {
   servaddr.sin_family = AF_INET;
   host = gethostbyname(argv[1]);
   if (host == NULL) {
-    printf("#client# %s not found in /etc/hosts\n", argv[1]);
+    printf("client# %s not found in /etc/hosts\n", argv[1]);
     exit(2);
   }
 
   nread = 0;
   while (argv[2][nread] != '\0') {
     if ((argv[2][nread] < '0') || (argv[2][nread] > '9')) {
-      printf("#client# secondo argomento non intero\n");
+      printf("client# secondo argomento non intero\n");
       exit(2);
     }
     nread++;
   }
   port = atoi(argv[2]);
   if (port < 1024 || port > 65535) {
-    printf("#client# porta scorretta...");
+    printf("client# porta scorretta...");
     exit(2);
   }
 
@@ -59,7 +57,7 @@ int main(int argc, char **argv) {
   clientaddr.sin_addr.s_addr = INADDR_ANY;
   clientaddr.sin_port = 0;
 
-  printf("#client# avviato\n");
+  printf("client# avviato\n");
 
   /* CREAZIONE SOCKET ---------------------------- */
   sd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -67,18 +65,18 @@ int main(int argc, char **argv) {
     perror("apertura socket");
     exit(3);
   }
-  printf("#client# creata la socket sd=%d\n", sd);
+  printf("client# creata la socket sd=%d\n", sd);
 
   /* BIND SOCKET, a una porta scelta dal sistema --------------- */
   if (bind(sd, (struct sockaddr *)&clientaddr, sizeof(clientaddr)) < 0) {
     perror("bind socket ");
     exit(1);
   }
-  printf("#client# bind socket, porta %i\n", clientaddr.sin_port);
+  printf("client# bind socket, porta %i\n", clientaddr.sin_port);
 
 #pragma endregion
   /* CORPO DEL CLIENT: */
-
+  printf("Inserisci stringa: ");
   while (gets(tmp)) {
     /* invio richiesta */
     len = sizeof(servaddr);
@@ -92,11 +90,12 @@ int main(int argc, char **argv) {
       perror("recvfrom");
       continue;
     } else {
-      printf("#client# recived: %s\n", tmp);
+      printf("client# recived: %s\n", tmp);
+      printf("Inserisci stringa: ");
     }
   }  // while
 
-  printf("#client# killed\n");
+  printf("\nclient# killed\n");
   shutdown(sd, 0);
   shutdown(sd, 1);
   close(sd);

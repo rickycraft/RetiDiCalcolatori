@@ -20,7 +20,7 @@
 /********************************************************/
 void gestore(int signo) {
   int stato;
-  printf("#server# esecuzione gestore di SIGCHLD\n");
+  printf("server# esecuzione gestore di SIGCHLD\n");
   wait(&stato);
 }
 /********************************************************/
@@ -36,13 +36,13 @@ int main(int argc, char **argv) {
 #pragma region setup
   /* CONTROLLO ARGOMENTI ---------------------------------- */
   if (argc != 2) {
-    printf("#server# Error: argc != 2\n", argv[0]);
+    printf("server# Error: argc != 2\n", argv[0]);
     exit(1);
   }
 
   port = atoi(argv[1]);
   if (port < 1024 || port > 65535) {
-    printf("#server# Porta scorretta...");
+    printf("server# Porta scorretta...");
     exit(2);
   }
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
   servaddr.sin_family = AF_INET;
   servaddr.sin_addr.s_addr = INADDR_ANY;
   servaddr.sin_port = htons(port);
-  printf("#server# avviato\n");
+  printf("server# avviato\n");
 
   /* CREAZIONE SOCKET TCP ------------------------------------------------ */
   listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,25 +59,25 @@ int main(int argc, char **argv) {
     perror("apertura socket TCP ");
     exit(1);
   }
-  printf("#server# creata socket TCP, fd=%d\n", listenfd);
+  printf("server# creata socket TCP, fd=%d\n", listenfd);
 
   if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0) {
     perror("set opzioni socket TCP");
     exit(2);
   }
-  printf("#server# set TCP socket options\n");
+  printf("server# set TCP socket options\n");
 
   if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
     perror("bind socket TCP");
     exit(3);
   }
-  printf("#server# bind socket TCP ok\n");
+  printf("server# bind socket TCP ok\n");
 
   if (listen(listenfd, 5) < 0) {
     perror("listen");
     exit(4);
   }
-  printf("#server# listen ok\n");
+  printf("server# listen ok\n");
 
   /* CREAZIONE SOCKET UDP ------------------------------------------------ */
   udpfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -85,19 +85,19 @@ int main(int argc, char **argv) {
     perror("apertura socket UDP");
     exit(5);
   }
-  printf("#server# creata socket UDP, fd=%d\n", udpfd);
+  printf("server# creata socket UDP, fd=%d\n", udpfd);
 
   if (setsockopt(udpfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0) {
     perror("set opzioni socket UDP");
     exit(6);
   }
-  printf("#server# set opzioni socket UDP ok\n");
+  printf("server# set opzioni socket UDP ok\n");
 
   if (bind(udpfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
     perror("bind socket UDP");
     exit(7);
   }
-  printf("#server# bind socket UDP ok\n");
+  printf("server# bind socket UDP ok\n");
 
   /* AGGANCIO GESTORE PER EVITARE FIGLI ZOMBIE --------------------------------
    */
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
       // GESTIONE TCP NEL FIGLIO
       if (fork() == 0) {
         close(listenfd);
-        printf("#server# accettata connessione, pid=%i\n", getpid());
+        printf("server# accettata connessione, pid=%i\n", getpid());
         while (read(connfd, tmp, sizeof(tmp)) > 0) {
           if ((nwrite = write(connfd, tmp, strlen(tmp) + 1)) < 0) {
             perror("write");
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
           }
         }
 
-        printf("#server# chiusa connessione, pid=%i\n", getpid());
+        printf("server# chiusa connessione, pid=%i\n", getpid());
         shutdown(connfd, 0);
         shutdown(connfd, 1);
         close(connfd);
@@ -171,6 +171,6 @@ int main(int argc, char **argv) {
       }
     }
   } /* ciclo for della select */
-  printf("#server# killed");
+  printf("server# killed");
   exit(0);
 }
